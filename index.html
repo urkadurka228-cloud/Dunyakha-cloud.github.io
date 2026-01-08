@@ -1,0 +1,3836 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft Clicker Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+        
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FF9800;
+            --danger-color: #F44336;
+            --success-color: #4CAF50;
+            --gold-color: #FFD700;
+            --dark-bg: #1a1a2e;
+            --menu-bg: #0f4c75;
+            --block-border: #8B4513;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #game-container {
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        
+        /* Загрузочный экран */
+        #loading-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--menu-bg), #1b262c);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--gold-color);
+        }
+        
+        /* Меню */
+        #menu-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--menu-bg), #1b262c);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .menu-title {
+            font-size: 3.5rem;
+            color: var(--gold-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 3px 3px 0 var(--block-border), 5px 5px 0 #000;
+            letter-spacing: 2px;
+            font-family: 'Minecraft', monospace;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+        
+        .menu-btn {
+            background: linear-gradient(45deg, var(--primary-color), #2E7D32);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.3rem;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #1B5E20, 0 8px 15px rgba(0,0,0,0.4);
+            transition: all 0.2s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #1B5E20, 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .menu-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1B5E20, 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        .menu-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .continue-btn {
+            background: linear-gradient(45deg, var(--secondary-color), #1565C0);
+            box-shadow: 0 6px 0 #0D47A1, 0 8px 15px rgba(0,0,0,0.4);
+        }
+        
+        .continue-btn:hover {
+            box-shadow: 0 8px 0 #0D47A1, 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .continue-btn:active {
+            box-shadow: 0 2px 0 #0D47A1, 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        .stats-btn {
+            background: linear-gradient(45deg, #9C27B0, #7B1FA2);
+            box-shadow: 0 6px 0 #4A148C, 0 8px 15px rgba(0,0,0,0.4);
+        }
+        
+        .stats-btn:hover {
+            box-shadow: 0 8px 0 #4A148C, 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .stats-btn:active {
+            box-shadow: 0 2px 0 #4A148C, 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        .settings-btn {
+            background: linear-gradient(45deg, #757575, #616161);
+            box-shadow: 0 6px 0 #424242, 0 8px 15px rgba(0,0,0,0.4);
+        }
+        
+        .settings-btn:hover {
+            box-shadow: 0 8px 0 #424242, 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .settings-btn:active {
+            box-shadow: 0 2px 0 #424242, 0 5px 10px rgba(0,0,0,0.4);
+        }
+        
+        .privacy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 2px solid #fff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .privacy-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .version {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+        }
+        
+        /* Игровой экран */
+        #game-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            z-index: 5;
+        }
+        
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .coins-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            color: var(--gold-color);
+            font-weight: bold;
+            background: rgba(0,0,0,0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 30%, var(--gold-color), #B8860B);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .coin-icon::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+        }
+        
+        .level-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1rem;
+            color: #4CAF50;
+            font-weight: bold;
+            background: rgba(0,0,0,0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
+        .game-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .game-header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .game-header-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        .block-info-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .block-name {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 #000;
+            font-family: 'Minecraft', monospace;
+        }
+        
+        .block-type {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .health-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .health-display {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .health-icon {
+            color: #ff6b6b;
+            font-size: 1.5rem;
+        }
+        
+        .block-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+        
+        .block {
+            width: 220px;
+            height: 220px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.05s;
+            user-select: none;
+            border-radius: 8px;
+        }
+        
+        .block.hit {
+            animation: hitEffect 0.1s ease-out;
+        }
+        
+        .block.regenerating {
+            animation: regeneratingEffect 2s infinite;
+        }
+        
+        .block-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.5),
+                inset 0 0 20px rgba(0,0,0,0.2);
+            border: 6px solid;
+            image-rendering: pixelated;
+        }
+        
+        .cracks-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+        
+        .regeneration-indicator {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        
+        .progress-bar-container {
+            width: 95%;
+            height: 25px;
+            background-color: #333;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 2px solid var(--block-border);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), #8BC34A);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.3) 50%, 
+                transparent 100%);
+            animation: shine 2s infinite;
+        }
+        
+        .game-stats {
+            width: 95%;
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--gold-color);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .coin-hit-animation {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--gold-color);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            animation: coinHitFloat 1s ease-out forwards;
+        }
+        
+        .auto-clicker-info {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            display: none;
+        }
+        
+        .damage-indicator {
+            position: absolute;
+            font-size: 1.2rem;
+            color: #ff4444;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            animation: damageFloat 1s ease-out forwards;
+        }
+        
+        /* Магазин */
+        #shop-screen, #upgrades-screen, #stats-screen, #settings-screen, #credits-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #2c3e50, #1a1a2e);
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 15;
+            overflow-y: auto;
+        }
+        
+        .screen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .screen-title {
+            font-size: 2rem;
+            color: var(--gold-color);
+            font-family: 'Minecraft', monospace;
+        }
+        
+        .back-btn {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 0 #b71c1c;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .shop-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .shop-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .shop-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid var(--block-border);
+            transition: all 0.3s;
+        }
+        
+        .shop-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .item-title {
+            font-size: 1.3rem;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .item-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .item-price {
+            color: var(--gold-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .item-description {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .item-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .buy-btn {
+            background: linear-gradient(45deg, var(--primary-color), #388E3C);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .buy-btn:disabled {
+            background: linear-gradient(45deg, #757575, #616161);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .buy-btn:not(:disabled):hover {
+            background: linear-gradient(45deg, #66BB6A, #43A047);
+            transform: translateY(-2px);
+        }
+        
+        .owned-badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .item-level {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        /* Статистика */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .stat-card-value {
+            font-size: 1.8rem;
+            color: var(--gold-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        /* Настройки */
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .setting-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .setting-title {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-checkbox {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-checkbox:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        .toggle-checkbox:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        .save-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Улучшения */
+        .upgrades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .upgrade-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .upgrade-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        
+        .upgrade-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+        
+        .upgrade-title {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .upgrade-description {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+            min-height: 40px;
+        }
+        
+        .upgrade-price {
+            color: var(--gold-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* Титры */
+        .credits-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: creditsScroll 30s linear infinite;
+        }
+        
+        .credits-title {
+            font-size: 3rem;
+            color: var(--gold-color);
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .credit-item {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInOut 5s linear infinite;
+        }
+        
+        .credit-role {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        
+        .credit-name {
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .final-thanks {
+            margin-top: 50px;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .return-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, var(--primary-color), #2E7D32);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 20;
+        }
+        
+        /* Анимации */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes hitEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes regeneratingEffect {
+            0% { box-shadow: 0 0 0 rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
+            100% { boxShadow: 0 0 0 rgba(76, 175, 80, 0.5); }
+        }
+        
+        @keyframes breakBlock {
+            0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+            50% { transform: scale(1.1); opacity: 0.8; filter: brightness(1.5); }
+            100% { transform: scale(0); opacity: 0; filter: brightness(2); }
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        @keyframes coinHitFloat {
+            0% { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-40px) scale(1.2); 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: translateY(-80px) scale(0.5); 
+                opacity: 0; 
+            }
+        }
+        
+        @keyframes damageFloat {
+            0% { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-30px) scale(1.1); 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: translateY(-60px) scale(0.7); 
+                opacity: 0; 
+            }
+        }
+        
+        @keyframes coinPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes autoClickerPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes creditsScroll {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background-color: #1b262c;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow-y: auto;
+            border: 3px solid var(--primary-color);
+            animation: fadeIn 0.4s;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--gold-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .modal-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: #ccc;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .modal-btn-secondary {
+            background-color: #757575;
+            color: white;
+        }
+        
+        /* Фон */
+        .minecraft-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+        }
+        
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, #8B4513, #A0522D);
+            z-index: 2;
+        }
+        
+        .cloud {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            z-index: 0;
+            animation: cloudFloat 60s linear infinite;
+        }
+        
+        .cloud:nth-child(1) {
+            width: 100px;
+            height: 40px;
+            top: 20%;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .cloud:nth-child(2) {
+            width: 150px;
+            height: 60px;
+            top: 15%;
+            left: -150px;
+            animation-delay: 20s;
+        }
+        
+        .cloud:nth-child(3) {
+            width: 80px;
+            height: 30px;
+            top: 30%;
+            left: -80px;
+            animation-delay: 40s;
+        }
+        
+        @keyframes cloudFloat {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 500px) {
+            .block {
+                width: 190px;
+                height: 190px;
+            }
+            
+            .menu-title {
+                font-size: 2.8rem;
+            }
+            
+            .menu-btn {
+                padding: 0.9rem;
+                font-size: 1.2rem;
+            }
+            
+            .block-name {
+                font-size: 1.7rem;
+            }
+            
+            .game-header {
+                padding: 10px;
+            }
+            
+            .coins-container {
+                font-size: 1.1rem;
+            }
+            
+            .screen-title {
+                font-size: 1.7rem;
+            }
+            
+            .upgrades-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .credits-title {
+                font-size: 2.2rem;
+            }
+            
+            .credit-name {
+                font-size: 1.5rem;
+            }
+            
+            .final-thanks {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Фон -->
+        <div class="minecraft-bg"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="ground"></div>
+        
+        <!-- Загрузочный экран -->
+        <div id="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Загрузка игры...</div>
+        </div>
+        
+        <!-- Экран меню -->
+        <div id="menu-screen">
+            <h1 class="menu-title">MINECRAFT CLICKER PRO</h1>
+            <div class="menu-buttons">
+                <button class="menu-btn continue-btn" id="continue-btn">
+                    <i class="fas fa-play"></i> Продолжить
+                </button>
+                <button class="menu-btn" id="new-game-btn">
+                    <i class="fas fa-plus-circle"></i> Новая игра
+                </button>
+                <button class="menu-btn stats-btn" id="stats-menu-btn">
+                    <i class="fas fa-chart-bar"></i> Статистика
+                </button>
+                <button class="menu-btn" id="shop-menu-btn">
+                    <i class="fas fa-shopping-cart"></i> Магазин
+                </button>
+                <button class="menu-btn" id="upgrades-menu-btn">
+                    <i class="fas fa-cogs"></i> Улучшения
+                </button>
+                <button class="menu-btn settings-btn" id="settings-menu-btn">
+                    <i class="fas fa-cog"></i> Настройки
+                </button>
+            </div>
+            <button class="privacy-btn" id="privacy-btn">Конфиденциальность</button>
+            <div class="version">Версия 2.1</div>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div id="game-screen">
+            <div class="game-header">
+                <div class="coins-container">
+                    <div class="coin-icon"></div>
+                    <span id="coins-counter">0</span>
+                </div>
+                <div class="level-container">
+                    <i class="fas fa-layer-group"></i>
+                    <span id="level-counter">Ур. 1</span>
+                </div>
+                <div class="game-buttons">
+                    <button class="game-header-btn" id="game-shop-btn" title="Магазин">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                    <button class="game-header-btn" id="game-upgrades-btn" title="Улучшения">
+                        <i class="fas fa-cogs"></i>
+                    </button>
+                    <button class="game-header-btn" id="game-stats-btn" title="Статистика">
+                        <i class="fas fa-chart-bar"></i>
+                    </button>
+                    <button class="game-header-btn" id="game-menu-btn" title="Меню">
+                        <i class="fas fa-home"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="block-info-container">
+                <div class="block-name" id="block-name">Земля</div>
+                <div class="block-type" id="block-type">Базовый блок</div>
+                <div class="health-container">
+                    <i class="fas fa-heart health-icon"></i>
+                    <div class="health-display" id="health-display">15/15</div>
+                </div>
+            </div>
+            
+            <div class="block-container">
+                <div class="block" id="block">
+                    <img src="" alt="Блок" class="block-img" id="block-img">
+                    <div class="cracks-overlay" id="cracks-overlay"></div>
+                    <div class="regeneration-indicator" id="regeneration-indicator">Регенерация!</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="dps-counter">0</div>
+                    <div class="stat-label">УВС</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-clicks">0</div>
+                    <div class="stat-label">Кликов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="blocks-broken">0</div>
+                    <div class="stat-label">Блоков</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="play-time">0:00</div>
+                    <div class="stat-label">Время</div>
+                </div>
+            </div>
+            
+            <div class="auto-clicker-info" id="auto-clicker-info"></div>
+        </div>
+        
+        <!-- Магазин -->
+        <div id="shop-screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Магазин</h2>
+                <button class="back-btn" id="shop-back-btn">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            
+            <div class="shop-categories">
+                <button class="category-btn active" data-category="all">Все</button>
+                <button class="category-btn" data-category="clickers">Кликеры</button>
+                <button class="category-btn" data-category="boosters">Бустеры</button>
+                <button class="category-btn" data-category="special">Особые</button>
+            </div>
+            
+            <div class="shop-items" id="shop-items-container">
+                <!-- Товары будут загружены через JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Улучшения -->
+        <div id="upgrades-screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Улучшения</h2>
+                <button class="back-btn" id="upgrades-back-btn">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            
+            <div class="upgrades-grid" id="upgrades-container">
+                <!-- Улучшения будут загружены через JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Статистика -->
+        <div id="stats-screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Статистика</h2>
+                <button class="back-btn" id="stats-back-btn">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            
+            <div class="stats-container" id="stats-container">
+                <!-- Статистика будет загружена через JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Настройки -->
+        <div id="settings-screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Настройки</h2>
+                <button class="back-btn" id="settings-back-btn">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            
+            <div class="settings-container">
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-volume-up"></i>
+                        Звуковые эффекты
+                    </div>
+                    <div class="setting-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-toggle" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-bell"></i>
+                        Уведомления
+                    </div>
+                    <div class="setting-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifications-toggle" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-save"></i>
+                        Автосохранение
+                    </div>
+                    <div class="setting-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autosave-toggle" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-palette"></i>
+                        Анимации
+                    </div>
+                    <div class="setting-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animations-toggle" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-trash"></i>
+                        Управление данными
+                    </div>
+                    <div class="setting-controls">
+                        <button class="menu-btn" id="clear-data-btn" style="padding: 8px 15px; font-size: 0.9rem;">
+                            <i class="fas fa-trash-alt"></i> Очистить данные
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-title">
+                        <i class="fas fa-info-circle"></i>
+                        О игре
+                    </div>
+                    <div class="setting-controls">
+                        <button class="menu-btn" id="about-btn" style="padding: 8px 15px; font-size: 0.9rem;">
+                            <i class="fas fa-info"></i> Информация
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Титры -->
+        <div id="credits-screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Титры</h2>
+            </div>
+            
+            <div class="credits-content" id="credits-content">
+                <div class="credits-title">Minecraft Clicker Pro</div>
+                
+                <div class="credit-item" style="animation-delay: 0s;">
+                    <div class="credit-role">Автор игры</div>
+                    <div class="credit-name">Данил Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 3s;">
+                    <div class="credit-role">Идея игры</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 6s;">
+                    <div class="credit-role">Разработка</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 9s;">
+                    <div class="credit-role">Дизайн</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 12s;">
+                    <div class="credit-role">Программирование</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 15s;">
+                    <div class="credit-role">Тестирование</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 18s;">
+                    <div class="credit-role">Звуковое оформление</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 21s;">
+                    <div class="credit-role">Геймдизайн</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="credit-item" style="animation-delay: 24s;">
+                    <div class="credit-role">Продюсирование</div>
+                    <div class="credit-name">Данила Фардтдинов</div>
+                </div>
+                
+                <div class="final-thanks">СПАСИБО ЗА ВНИМАНИЕ!</div>
+            </div>
+            
+            <button class="return-btn" id="credits-back-btn">
+                <i class="fas fa-home"></i> Вернуться в меню
+            </button>
+        </div>
+        
+        <!-- Модальные окна -->
+        <div class="modal" id="privacy-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Политика конфиденциальности</h2>
+                <div class="modal-text">
+                    <p><strong>Minecraft Clicker Pro</strong> - это браузерная игра, которая работает полностью локально на вашем устройстве.</p>
+                    
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Какие данные мы собираем?</h3>
+                    <p>✅ <strong>Никакие данные не собираются</strong> - игра не отправляет информацию на серверы</p>
+                    <p>✅ Все данные хранятся только в вашем браузере</p>
+                    <p>✅ Игра не требует подключения к интернету после загрузки</p>
+                    
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Что сохраняется локально?</h3>
+                    <p>• Прогресс игры (монеты, улучшения, статистика)</p>
+                    <p>• Настройки игры</p>
+                    <p>• Приобретенные предметы в магазине</p>
+                    
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Как удалить данные?</h3>
+                    <p>Вы можете очистить данные игры в настройках или очистить кэш браузера.</p>
+                    
+                    <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
+                        Версия игры: 2.1<br>
+                        Последнее обновление: 2024
+                    </p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="close-modal-btn">Закрыть</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" id="new-game-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Новая игра</h2>
+                <div class="modal-text">
+                    <p>Вы уверены, что хотите начать новую игру?</p>
+                    <p><strong>Текущий прогресс будет удален!</strong></p>
+                    <p style="color: var(--accent-color); font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle"></i> Это действие нельзя отменить
+                    </p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="confirm-new-game-btn">Начать новую игру</button>
+                    <button class="modal-btn modal-btn-secondary" id="cancel-new-game-btn">Отмена</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" id="clear-data-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Очистка данных</h2>
+                <div class="modal-text">
+                    <p>Вы уверены, что хотите удалить все данные игры?</p>
+                    <p><strong>Будет удалено:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Весь прогресс игры</li>
+                        <li>Все монеты и улучшения</li>
+                        <li>Всю статистику</li>
+                        <li>Все настройки</li>
+                    </ul>
+                    <p style="color: var(--danger-color); font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle"></i> Это действие нельзя отменить!
+                    </p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="confirm-clear-data-btn">Удалить все данные</button>
+                    <button class="modal-btn modal-btn-secondary" id="cancel-clear-data-btn">Отмена</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" id="about-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">О игре</h2>
+                <div class="modal-text">
+                    <p><strong>Minecraft Clicker Pro</strong> - улучшенная версия классического кликера с тематикой Minecraft.</p>
+                    
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Особенности:</h3>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>35 уникальных блоков для разрушения</li>
+                        <li>Система улучшений и магазин</li>
+                        <li>Полное сохранение прогресса</li>
+                        <li>Автокликеры и бустеры</li>
+                        <li>Детальная статистика</li>
+                        <li>Оптимизация для мобильных устройств</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Управление:</h3>
+                    <p>• Кликайте по блоку для его разрушения</p>
+                    <p>• Зарабатывайте монеты за разрушение блоков</p>
+                    <p>• Покупайте улучшения в магазине</p>
+                    <p>• Повышайте уровень и открывайте новые блоки</p>
+                    
+                    <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
+                        Версия: 2.1<br>
+                        Автор: Данил Фардтдинов<br>
+                        Идея: Данила Фардтдинов<br>
+                        Создано с использованием HTML5, CSS3 и JavaScript
+                    </p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="close-about-modal-btn">Закрыть</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Уведомление о сохранении -->
+        <div class="save-notification" id="save-notification">
+            <i class="fas fa-check-circle"></i> Игра сохранена!
+        </div>
+    </div>
+
+    <script>
+        // ============================
+        // ОСНОВНЫЕ ПЕРЕМЕННЫЕ И КОНСТАНТЫ
+        // ============================
+        
+        // Версия сохранения (для миграции данных)
+        const SAVE_VERSION = '2.1';
+        const TOTAL_BLOCKS = 35; // Всего блоков в игре
+        
+        // Элементы DOM
+        const loadingScreen = document.getElementById('loading-screen');
+        const menuScreen = document.getElementById('menu-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const shopScreen = document.getElementById('shop-screen');
+        const upgradesScreen = document.getElementById('upgrades-screen');
+        const statsScreen = document.getElementById('stats-screen');
+        const settingsScreen = document.getElementById('settings-screen');
+        const creditsScreen = document.getElementById('credits-screen');
+        
+        // ============================
+        // ДАННЫЕ БЛОКОВ (35 видов)
+        // ============================
+        
+        const blocks = [
+            // Базовые блоки (1-5)
+            {
+                id: 'dirt',
+                name: "Земля",
+                type: "Базовый",
+                level: 1,
+                maxHealth: 15,
+                baseCoins: { min: 1, max: 3 },
+                color: "#8B4513",
+                innerColor: "#A0522D",
+                borderColor: "#654321",
+                borderSize: "6px",
+                experience: 5
+            },
+            {
+                id: 'wood',
+                name: "Дерево",
+                type: "Базовый",
+                level: 1,
+                maxHealth: 25,
+                baseCoins: { min: 2, max: 4 },
+                color: "#8B4513",
+                innerColor: "#D49F31",
+                borderColor: "#733B0A",
+                borderSize: "6px",
+                experience: 8
+            },
+            {
+                id: 'stone',
+                name: "Камень",
+                type: "Базовый",
+                level: 2,
+                maxHealth: 50,
+                baseCoins: { min: 3, max: 6 },
+                color: "#808080",
+                innerColor: "#A0A0A0",
+                borderColor: "#606060",
+                borderSize: "6px",
+                experience: 12
+            },
+            {
+                id: 'cobblestone',
+                name: "Булыжник",
+                type: "Базовый",
+                level: 2,
+                maxHealth: 55,
+                baseCoins: { min: 4, max: 7 },
+                color: "#696969",
+                innerColor: "#808080",
+                borderColor: "#505050",
+                borderSize: "6px",
+                experience: 14
+            },
+            {
+                id: 'sand',
+                name: "Песок",
+                type: "Базовый",
+                level: 3,
+                maxHealth: 30,
+                baseCoins: { min: 2, max: 5 },
+                color: "#F4A460",
+                innerColor: "#DEB887",
+                borderColor: "#D2691E",
+                borderSize: "6px",
+                experience: 10
+            },
+            // Руда обычная (6-15)
+            {
+                id: 'coal',
+                name: "Уголь",
+                type: "Руда",
+                level: 3,
+                maxHealth: 100,
+                baseCoins: { min: 5, max: 10 },
+                color: "#2F4F4F",
+                innerColor: "#363636",
+                borderColor: "#1C1C1C",
+                borderSize: "7px",
+                experience: 20
+            },
+            {
+                id: 'copper',
+                name: "Медь",
+                type: "Руда",
+                level: 4,
+                maxHealth: 130,
+                baseCoins: { min: 8, max: 15 },
+                color: "#B87333",
+                innerColor: "#DA8A67",
+                borderColor: "#8B4513",
+                borderSize: "7px",
+                experience: 25
+            },
+            {
+                id: 'iron',
+                name: "Железо",
+                type: "Руда",
+                level: 5,
+                maxHealth: 175,
+                baseCoins: { min: 12, max: 20 },
+                color: "#D1D1D1",
+                innerColor: "#B0B0B0",
+                borderColor: "#888888",
+                borderSize: "8px",
+                experience: 35
+            },
+            {
+                id: 'tin',
+                name: "Олово",
+                type: "Руда",
+                level: 6,
+                maxHealth: 150,
+                baseCoins: { min: 10, max: 18 },
+                color: "#C0C0C0",
+                innerColor: "#D3D3D3",
+                borderColor: "#A9A9A9",
+                borderSize: "7px",
+                experience: 30
+            },
+            {
+                id: 'lead',
+                name: "Свинец",
+                type: "Руда",
+                level: 7,
+                maxHealth: 220,
+                baseCoins: { min: 15, max: 25 },
+                color: "#575757",
+                innerColor: "#696969",
+                borderColor: "#404040",
+                borderSize: "8px",
+                experience: 40
+            },
+            {
+                id: 'nickel',
+                name: "Никель",
+                type: "Руда",
+                level: 8,
+                maxHealth: 200,
+                baseCoins: { min: 18, max: 28 },
+                color: "#A8A8A8",
+                innerColor: "#C0C0C0",
+                borderColor: "#808080",
+                borderSize: "8px",
+                experience: 38
+            },
+            {
+                id: 'zinc',
+                name: "Цинк",
+                type: "Руда",
+                level: 9,
+                maxHealth: 180,
+                baseCoins: { min: 16, max: 26 },
+                color: "#DAA520",
+                innerColor: "#F0E68C",
+                borderColor: "#B8860B",
+                borderSize: "8px",
+                experience: 36
+            },
+            {
+                id: 'silver',
+                name: "Серебро",
+                type: "Драгоценный",
+                level: 10,
+                maxHealth: 160,
+                baseCoins: { min: 25, max: 40 },
+                color: "#C0C0C0",
+                innerColor: "#E0E0E0",
+                borderColor: "#A0A0A0",
+                borderSize: "9px",
+                experience: 45
+            },
+            {
+                id: 'aluminum',
+                name: "Алюминий",
+                type: "Руда",
+                level: 11,
+                maxHealth: 140,
+                baseCoins: { min: 14, max: 22 },
+                color: "#A9A9A9",
+                innerColor: "#C9C9C9",
+                borderColor: "#898989",
+                borderSize: "7px",
+                experience: 32
+            },
+            // Драгоценные руды (16-25)
+            {
+                id: 'gold',
+                name: "Золото",
+                type: "Драгоценный",
+                level: 12,
+                maxHealth: 250,
+                baseCoins: { min: 20, max: 35 },
+                color: "#FFD700",
+                innerColor: "#FFEC8B",
+                borderColor: "#B8860B",
+                borderSize: "9px",
+                experience: 50
+            },
+            {
+                id: 'platinum',
+                name: "Платина",
+                type: "Драгоценный",
+                level: 13,
+                maxHealth: 300,
+                baseCoins: { min: 30, max: 50 },
+                color: "#E5E4E2",
+                innerColor: "#FFFFFF",
+                borderColor: "#C0C0C0",
+                borderSize: "10px",
+                experience: 60
+            },
+            {
+                id: 'diamond',
+                name: "Алмаз",
+                type: "Драгоценный",
+                level: 14,
+                maxHealth: 350,
+                baseCoins: { min: 35, max: 60 },
+                color: "#00FFFF",
+                innerColor: "#AFEEEE",
+                borderColor: "#008B8B",
+                borderSize: "10px",
+                experience: 70
+            },
+            {
+                id: 'emerald',
+                name: "Изумруд",
+                type: "Драгоценный",
+                level: 15,
+                maxHealth: 400,
+                baseCoins: { min: 40, max: 70 },
+                color: "#00FF00",
+                innerColor: "#98FB98",
+                borderColor: "#006400",
+                borderSize: "10px",
+                experience: 80
+            },
+            {
+                id: 'ruby',
+                name: "Рубин",
+                type: "Драгоценный",
+                level: 16,
+                maxHealth: 380,
+                baseCoins: { min: 45, max: 75 },
+                color: "#FF0000",
+                innerColor: "#FF6347",
+                borderColor: "#8B0000",
+                borderSize: "10px",
+                experience: 75
+            },
+            {
+                id: 'sapphire',
+                name: "Сапфир",
+                type: "Драгоценный",
+                level: 17,
+                maxHealth: 370,
+                baseCoins: { min: 42, max: 72 },
+                color: "#0000FF",
+                innerColor: "#4169E1",
+                borderColor: "#00008B",
+                borderSize: "10px",
+                experience: 73
+            },
+            {
+                id: 'topaz',
+                name: "Топаз",
+                type: "Драгоценный",
+                level: 18,
+                maxHealth: 320,
+                baseCoins: { min: 38, max: 65 },
+                color: "#FFD700",
+                innerColor: "#FFFACD",
+                borderColor: "#DAA520",
+                borderSize: "9px",
+                experience: 65
+            },
+            {
+                id: 'amethyst',
+                name: "Аметист",
+                type: "Драгоценный",
+                level: 19,
+                maxHealth: 340,
+                baseCoins: { min: 40, max: 68 },
+                color: "#9932CC",
+                innerColor: "#DA70D6",
+                borderColor: "#8B008B",
+                borderSize: "9px",
+                experience: 68
+            },
+            {
+                id: 'opal',
+                name: "Опал",
+                type: "Драгоценный",
+                level: 20,
+                maxHealth: 290,
+                baseCoins: { min: 35, max: 60 },
+                color: "#E6E6FA",
+                innerColor: "#F0F8FF",
+                borderColor: "#D8BFD8",
+                borderSize: "9px",
+                experience: 62
+            },
+            // Особые блоки (26-30)
+            {
+                id: 'redstone',
+                name: "Редстоун",
+                type: "Особый",
+                level: 21,
+                maxHealth: 280,
+                baseCoins: { min: 32, max: 58 },
+                color: "#FF0000",
+                innerColor: "#FF4500",
+                borderColor: "#8B0000",
+                borderSize: "9px",
+                experience: 58
+            },
+            {
+                id: 'lapis',
+                name: "Лазурит",
+                type: "Драгоценный",
+                level: 22,
+                maxHealth: 260,
+                baseCoins: { min: 30, max: 55 },
+                color: "#0000FF",
+                innerColor: "#1E90FF",
+                borderColor: "#00008B",
+                borderSize: "9px",
+                experience: 55
+            },
+            {
+                id: 'quartz',
+                name: "Кварц",
+                type: "Особый",
+                level: 23,
+                maxHealth: 240,
+                baseCoins: { min: 28, max: 50 },
+                color: "#F5F5F5",
+                innerColor: "#FFFFFF",
+                borderColor: "#C0C0C0",
+                borderSize: "8px",
+                experience: 50
+            },
+            {
+                id: 'glowstone',
+                name: "Светокамень",
+                type: "Особый",
+                level: 24,
+                maxHealth: 220,
+                baseCoins: { min: 25, max: 45 },
+                color: "#FFD700",
+                innerColor: "#FFFF00",
+                borderColor: "#FFA500",
+                borderSize: "8px",
+                experience: 48
+            },
+            {
+                id: 'prismarine',
+                name: "Призмарин",
+                type: "Особый",
+                level: 25,
+                maxHealth: 300,
+                baseCoins: { min: 35, max: 60 },
+                color: "#20B2AA",
+                innerColor: "#48D1CC",
+                borderColor: "#008B8B",
+                borderSize: "9px",
+                experience: 65
+            },
+            // Прочные блоки (31-35)
+            {
+                id: 'obsidian',
+                name: "Обсидиан",
+                type: "Прочный",
+                level: 26,
+                maxHealth: 500,
+                baseCoins: { min: 50, max: 85 },
+                color: "#000000",
+                innerColor: "#2F2F2F",
+                borderColor: "#1A1A1A",
+                borderSize: "11px",
+                experience: 85
+            },
+            {
+                id: 'netherite',
+                name: "Незерит",
+                type: "Прочный",
+                level: 27,
+                maxHealth: 600,
+                baseCoins: { min: 60, max: 100 },
+                color: "#4A4A4A",
+                innerColor: "#696969",
+                borderColor: "#2C2C2C",
+                borderSize: "12px",
+                experience: 100
+            },
+            {
+                id: 'mythril',
+                name: "Мифрил",
+                type: "Легендарный",
+                level: 28,
+                maxHealth: 700,
+                baseCoins: { min: 70, max: 120 },
+                color: "#87CEEB",
+                innerColor: "#B0E0E6",
+                borderColor: "#4682B4",
+                borderSize: "13px",
+                experience: 120
+            },
+            {
+                id: 'adamantite',
+                name: "Адамантит",
+                type: "Легендарный",
+                level: 29,
+                maxHealth: 800,
+                baseCoins: { min: 80, max: 140 },
+                color: "#FF4500",
+                innerColor: "#FF6347",
+                borderColor: "#B22222",
+                borderSize: "14px",
+                experience: 140
+            },
+            {
+                id: 'dragonstone',
+                name: "Драконий камень",
+                type: "Легендарный",
+                level: 30,
+                maxHealth: 1000,
+                baseCoins: { min: 100, max: 200 },
+                color: "#8A2BE2",
+                innerColor: "#9370DB",
+                borderColor: "#4B0082",
+                borderSize: "15px",
+                experience: 200
+            }
+        ];
+        
+        // ============================
+        // МАГАЗИН (12 товаров - убраны зелья и дождь монет)
+        // ============================
+        
+        const shopItems = [
+            {
+                id: 'auto_clicker_1',
+                name: 'Базовый автокликер',
+                category: 'clickers',
+                price: 5000,
+                description: 'Автоматически кликает по блоку каждые 5 секунд, нанося 1 урон.',
+                icon: 'fas fa-mouse-pointer',
+                iconColor: '#4CAF50',
+                effect: { type: 'autoClicker', damage: 1, interval: 5000 },
+                maxLevel: 1
+            },
+            {
+                id: 'auto_clicker_2',
+                name: 'Улучшенный автокликер',
+                category: 'clickers',
+                price: 15000,
+                description: 'Быстрый автокликер, наносящий 2 урона каждые 3 секунды.',
+                icon: 'fas fa-bolt',
+                iconColor: '#FF9800',
+                effect: { type: 'autoClicker', damage: 2, interval: 3000 },
+                maxLevel: 1,
+                requires: 'auto_clicker_1'
+            },
+            {
+                id: 'auto_clicker_3',
+                name: 'Продвинутый автокликер',
+                category: 'clickers',
+                price: 50000,
+                description: 'Мощный автокликер, наносящий 5 урона каждую секунду.',
+                icon: 'fas fa-rocket',
+                iconColor: '#F44336',
+                effect: { type: 'autoClicker', damage: 5, interval: 1000 },
+                maxLevel: 1,
+                requires: 'auto_clicker_2'
+            },
+            {
+                id: 'damage_booster_1',
+                name: 'Усилитель удара I',
+                category: 'boosters',
+                price: 3000,
+                description: 'Увеличивает ваш урон на 50%.',
+                icon: 'fas fa-fist-raised',
+                iconColor: '#FF4444',
+                effect: { type: 'damageMultiplier', value: 1.5 },
+                maxLevel: 5
+            },
+            {
+                id: 'damage_booster_2',
+                name: 'Усилитель удара II',
+                category: 'boosters',
+                price: 10000,
+                description: 'Увеличивает ваш урон на 100%.',
+                icon: 'fas fa-gem',
+                iconColor: '#9C27B0',
+                effect: { type: 'damageMultiplier', value: 2.0 },
+                maxLevel: 3,
+                requires: 'damage_booster_1'
+            },
+            {
+                id: 'coin_booster_1',
+                name: 'Множитель монет I',
+                category: 'boosters',
+                price: 4000,
+                description: 'Увеличивает получаемые монеты на 50%.',
+                icon: 'fas fa-coins',
+                iconColor: '#FFD700',
+                effect: { type: 'coinMultiplier', value: 1.5 },
+                maxLevel: 5
+            },
+            {
+                id: 'coin_booster_2',
+                name: 'Множитель монет II',
+                category: 'boosters',
+                price: 12000,
+                description: 'Увеличивает получаемые монеты на 100%.',
+                icon: 'fas fa-money-bill-wave',
+                iconColor: '#FF9800',
+                effect: { type: 'coinMultiplier', value: 2.0 },
+                maxLevel: 3,
+                requires: 'coin_booster_1'
+            },
+            {
+                id: 'critical_boost',
+                name: 'Критический удар',
+                category: 'boosters',
+                price: 8000,
+                description: 'Дает 10% шанс нанести критический удар (x2 урона).',
+                icon: 'fas fa-bullseye',
+                iconColor: '#F44336',
+                effect: { type: 'critical', chance: 10, multiplier: 2 },
+                maxLevel: 1
+            },
+            {
+                id: 'luck_boost',
+                name: 'Удача',
+                category: 'boosters',
+                price: 6000,
+                description: 'Увеличивает количество получаемых монет на 25%.',
+                icon: 'fas fa-clover',
+                iconColor: '#4CAF50',
+                effect: { type: 'luck', value: 1.25 },
+                maxLevel: 1
+            },
+            {
+                id: 'anti_regen',
+                name: 'Анти-регенерация',
+                category: 'special',
+                price: 12000,
+                description: 'Отключает регенерацию блоков.',
+                icon: 'fas fa-ban',
+                iconColor: '#757575',
+                effect: { type: 'antiRegen' },
+                maxLevel: 1
+            },
+            {
+                id: 'instant_break',
+                name: 'Мгновенное разрушение',
+                category: 'special',
+                price: 50000,
+                description: 'Мгновенно разрушает текущий блок (одноразовое).',
+                icon: 'fas fa-bomb',
+                iconColor: '#FF9800',
+                effect: { type: 'instantBreak' },
+                maxLevel: 1,
+                consumable: true
+            },
+            {
+                id: 'block_skip',
+                name: 'Пропуск блока',
+                category: 'special',
+                price: 30000,
+                description: 'Позволяет пропустить текущий блок и перейти к следующему.',
+                icon: 'fas fa-forward',
+                iconColor: '#2196F3',
+                effect: { type: 'blockSkip' },
+                maxLevel: 1,
+                consumable: true
+            }
+        ];
+        
+        // ============================
+        // УЛУЧШЕНИЯ (8 видов - убраны магнит монет и зелье здоровья)
+        // ============================
+        
+        const upgrades = [
+            {
+                id: 'upgrade_click_power',
+                name: 'Сила клика',
+                description: 'Увеличивает базовый урон от клика.',
+                icon: 'fas fa-hand-rock',
+                basePrice: 1000,
+                priceMultiplier: 1.5,
+                maxLevel: 20,
+                effect: { type: 'baseDamage', value: 0.5 }
+            },
+            {
+                id: 'upgrade_coin_value',
+                name: 'Ценность монет',
+                description: 'Увеличивает количество монет с каждого блока.',
+                icon: 'fas fa-coins',
+                basePrice: 1500,
+                priceMultiplier: 1.6,
+                maxLevel: 15,
+                effect: { type: 'coinValue', value: 0.1 }
+            },
+            {
+                id: 'upgrade_critical_chance',
+                name: 'Шанс крита',
+                description: 'Увеличивает шанс критического удара.',
+                icon: 'fas fa-bullseye',
+                basePrice: 3000,
+                priceMultiplier: 2.0,
+                maxLevel: 10,
+                effect: { type: 'criticalChance', value: 1 }
+            },
+            {
+                id: 'upgrade_critical_damage',
+                name: 'Сила крита',
+                description: 'Увеличивает множитель критического удара.',
+                icon: 'fas fa-gem',
+                basePrice: 5000,
+                priceMultiplier: 2.2,
+                maxLevel: 8,
+                effect: { type: 'criticalMultiplier', value: 0.2 }
+            },
+            {
+                id: 'upgrade_auto_clicker_power',
+                name: 'Сила автокликера',
+                description: 'Увеличивает урон всех автокликеров.',
+                icon: 'fas fa-robot',
+                basePrice: 8000,
+                priceMultiplier: 1.8,
+                maxLevel: 10,
+                effect: { type: 'autoClickerDamage', value: 0.3 }
+            },
+            {
+                id: 'upgrade_regen_slow',
+                name: 'Замедление регенерации',
+                description: 'Увеличивает время до начала регенерации блоков.',
+                icon: 'fas fa-hourglass-half',
+                basePrice: 4000,
+                priceMultiplier: 1.7,
+                maxLevel: 8,
+                effect: { type: 'regenDelay', value: 5 }
+            },
+            {
+                id: 'upgrade_health_reduction',
+                name: 'Снижение здоровья',
+                description: 'Уменьшает максимальное здоровье блоков.',
+                icon: 'fas fa-heartbeat',
+                basePrice: 10000,
+                priceMultiplier: 2.5,
+                maxLevel: 5,
+                effect: { type: 'blockHealth', value: -0.05 }
+            },
+            {
+                id: 'upgrade_experience_boost',
+                name: 'Ускорение опыта',
+                description: 'Увеличивает получаемый опыт.',
+                icon: 'fas fa-chart-line',
+                basePrice: 6000,
+                priceMultiplier: 1.9,
+                maxLevel: 10,
+                effect: { type: 'experienceMultiplier', value: 0.1 }
+            }
+        ];
+        
+        // ============================
+        // ИНИЦИАЛИЗАЦИЯ ИГРЫ
+        // ============================
+        
+        let gameState = {
+            // Основные
+            coins: 0,
+            level: 1,
+            experience: 0,
+            maxExperience: 100,
+            currentBlock: 0,
+            currentHealth: 0,
+            maxHealth: 0,
+            
+            // Статистика
+            totalClicks: 0,
+            blocksBroken: 0,
+            totalCoinsEarned: 0,
+            totalDamage: 0,
+            playTimeSeconds: 0,
+            startTime: Date.now(),
+            lastSaveTime: Date.now(),
+            
+            // Улучшения
+            damageMultiplier: 1,
+            coinMultiplier: 1,
+            criticalChance: 5, // 5%
+            criticalMultiplier: 2,
+            luckMultiplier: 1,
+            
+            // Автокликеры
+            autoClickers: [],
+            autoClickerDamage: 0,
+            
+            // Регенерация
+            regenerationEnabled: true,
+            regenerationRate: 10,
+            regenerationDelay: 30,
+            antiRegen: false,
+            
+            // Настройки
+            soundEnabled: true,
+            notificationsEnabled: true,
+            autosaveEnabled: true,
+            animationsEnabled: true,
+            
+            // Купленные предметы
+            purchasedItems: {},
+            unlockedUpgrades: [],
+            
+            // Системные
+            isBreaking: false,
+            isTouching: false,
+            lastHitTime: Date.now(),
+            regenerationTimer: null,
+            regenerationInterval: null,
+            autoClickerIntervals: [],
+            playTimer: null,
+            saveInterval: null,
+            
+            // Для титров
+            creditsShown: false
+        };
+        
+        // Элементы DOM
+        const continueBtn = document.getElementById('continue-btn');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const statsMenuBtn = document.getElementById('stats-menu-btn');
+        const shopMenuBtn = document.getElementById('shop-menu-btn');
+        const upgradesMenuBtn = document.getElementById('upgrades-menu-btn');
+        const settingsMenuBtn = document.getElementById('settings-menu-btn');
+        const privacyBtn = document.getElementById('privacy-btn');
+        const gameShopBtn = document.getElementById('game-shop-btn');
+        const gameUpgradesBtn = document.getElementById('game-upgrades-btn');
+        const gameStatsBtn = document.getElementById('game-stats-btn');
+        const gameMenuBtn = document.getElementById('game-menu-btn');
+        const creditsBackBtn = document.getElementById('credits-back-btn');
+        
+        const block = document.getElementById('block');
+        const blockImg = document.getElementById('block-img');
+        const cracksOverlay = document.getElementById('cracks-overlay');
+        const coinsCounter = document.getElementById('coins-counter');
+        const levelCounter = document.getElementById('level-counter');
+        const blockName = document.getElementById('block-name');
+        const blockType = document.getElementById('block-type');
+        const healthDisplay = document.getElementById('health-display');
+        const progressBar = document.getElementById('progress-bar');
+        const regenerationIndicator = document.getElementById('regeneration-indicator');
+        
+        // ============================
+        // ФУНКЦИИ СОХРАНЕНИЯ
+        // ============================
+        
+        function saveGame() {
+            if (!gameState.autosaveEnabled) return;
+            
+            const saveData = {
+                version: SAVE_VERSION,
+                timestamp: Date.now(),
+                gameState: {
+                    coins: gameState.coins,
+                    level: gameState.level,
+                    experience: gameState.experience,
+                    maxExperience: gameState.maxExperience,
+                    currentBlock: gameState.currentBlock,
+                    currentHealth: gameState.currentHealth,
+                    maxHealth: gameState.maxHealth,
+                    
+                    totalClicks: gameState.totalClicks,
+                    blocksBroken: gameState.blocksBroken,
+                    totalCoinsEarned: gameState.totalCoinsEarned,
+                    totalDamage: gameState.totalDamage,
+                    playTimeSeconds: gameState.playTimeSeconds,
+                    startTime: gameState.startTime,
+                    
+                    damageMultiplier: gameState.damageMultiplier,
+                    coinMultiplier: gameState.coinMultiplier,
+                    criticalChance: gameState.criticalChance,
+                    criticalMultiplier: gameState.criticalMultiplier,
+                    luckMultiplier: gameState.luckMultiplier,
+                    
+                    autoClickers: gameState.autoClickers,
+                    autoClickerDamage: gameState.autoClickerDamage,
+                    
+                    regenerationEnabled: gameState.regenerationEnabled,
+                    regenerationRate: gameState.regenerationRate,
+                    regenerationDelay: gameState.regenerationDelay,
+                    antiRegen: gameState.antiRegen,
+                    
+                    soundEnabled: gameState.soundEnabled,
+                    notificationsEnabled: gameState.notificationsEnabled,
+                    autosaveEnabled: gameState.autosaveEnabled,
+                    animationsEnabled: gameState.animationsEnabled,
+                    
+                    purchasedItems: gameState.purchasedItems,
+                    unlockedUpgrades: gameState.unlockedUpgrades,
+                    
+                    creditsShown: gameState.creditsShown
+                }
+            };
+            
+            try {
+                localStorage.setItem('minecraftClickerSave', JSON.stringify(saveData));
+                gameState.lastSaveTime = Date.now();
+                
+                // Показать уведомление о сохранении
+                if (gameState.notificationsEnabled) {
+                    showSaveNotification();
+                }
+                
+                console.log('Игра сохранена');
+            } catch (e) {
+                console.error('Ошибка при сохранении игры:', e);
+            }
+        }
+        
+        function loadGame() {
+            try {
+                const saveData = localStorage.getItem('minecraftClickerSave');
+                
+                if (!saveData) {
+                    console.log('Сохранение не найдено, начинаем новую игру');
+                    return false;
+                }
+                
+                const parsedData = JSON.parse(saveData);
+                
+                // Проверка версии сохранения
+                if (parsedData.version !== SAVE_VERSION) {
+                    console.log('Версия сохранения устарела, начинаем новую игру');
+                    return false;
+                }
+                
+                // Загрузка состояния игры
+                const loadedState = parsedData.gameState;
+                
+                // Основные данные
+                gameState.coins = loadedState.coins || 0;
+                gameState.level = loadedState.level || 1;
+                gameState.experience = loadedState.experience || 0;
+                gameState.maxExperience = loadedState.maxExperience || 100;
+                gameState.currentBlock = loadedState.currentBlock || 0;
+                gameState.currentHealth = loadedState.currentHealth || 0;
+                gameState.maxHealth = loadedState.maxHealth || 0;
+                
+                // Статистика
+                gameState.totalClicks = loadedState.totalClicks || 0;
+                gameState.blocksBroken = loadedState.blocksBroken || 0;
+                gameState.totalCoinsEarned = loadedState.totalCoinsEarned || 0;
+                gameState.totalDamage = loadedState.totalDamage || 0;
+                gameState.playTimeSeconds = loadedState.playTimeSeconds || 0;
+                gameState.startTime = loadedState.startTime || Date.now();
+                
+                // Улучшения
+                gameState.damageMultiplier = loadedState.damageMultiplier || 1;
+                gameState.coinMultiplier = loadedState.coinMultiplier || 1;
+                gameState.criticalChance = loadedState.criticalChance || 5;
+                gameState.criticalMultiplier = loadedState.criticalMultiplier || 2;
+                gameState.luckMultiplier = loadedState.luckMultiplier || 1;
+                
+                // Автокликеры
+                gameState.autoClickers = loadedState.autoClickers || [];
+                gameState.autoClickerDamage = loadedState.autoClickerDamage || 0;
+                
+                // Регенерация
+                gameState.regenerationEnabled = loadedState.regenerationEnabled !== undefined ? loadedState.regenerationEnabled : true;
+                gameState.regenerationRate = loadedState.regenerationRate || 10;
+                gameState.regenerationDelay = loadedState.regenerationDelay || 30;
+                gameState.antiRegen = loadedState.antiRegen || false;
+                
+                // Настройки
+                gameState.soundEnabled = loadedState.soundEnabled !== undefined ? loadedState.soundEnabled : true;
+                gameState.notificationsEnabled = loadedState.notificationsEnabled !== undefined ? loadedState.notificationsEnabled : true;
+                gameState.autosaveEnabled = loadedState.autosaveEnabled !== undefined ? loadedState.autosaveEnabled : true;
+                gameState.animationsEnabled = loadedState.animationsEnabled !== undefined ? loadedState.animationsEnabled : true;
+                
+                // Купленные предметы и улучшения
+                gameState.purchasedItems = loadedState.purchasedItems || {};
+                gameState.unlockedUpgrades = loadedState.unlockedUpgrades || [];
+                
+                // Титры
+                gameState.creditsShown = loadedState.creditsShown || false;
+                
+                console.log('Игра загружена');
+                return true;
+            } catch (e) {
+                console.error('Ошибка при загрузке игры:', e);
+                return false;
+            }
+        }
+        
+        function clearSave() {
+            try {
+                localStorage.removeItem('minecraftClickerSave');
+                console.log('Сохранение очищено');
+                return true;
+            } catch (e) {
+                console.error('Ошибка при очистке сохранения:', e);
+                return false;
+            }
+        }
+        
+        function showSaveNotification() {
+            const saveNotification = document.getElementById('save-notification');
+            saveNotification.style.display = 'block';
+            setTimeout(() => {
+                saveNotification.style.display = 'none';
+            }, 2000);
+        }
+        
+        // ============================
+        // ИНИЦИАЛИЗАЦИЯ ИГРОВОГО ПРОЦЕССА
+        // ============================
+        
+        function initGame() {
+            // Загрузка сохранения
+            const loaded = loadGame();
+            
+            // Если сохранение загружено, проверяем можно ли продолжить
+            if (loaded && gameState.currentBlock !== undefined) {
+                continueBtn.style.display = 'flex';
+            } else {
+                continueBtn.style.display = 'none';
+                gameState.currentBlock = 0;
+            }
+            
+            // Инициализация блока
+            initBlock();
+            
+            // Обновление интерфейса
+            updateUI();
+            
+            // Загрузка магазина
+            loadShopItems();
+            
+            // Загрузка улучшений
+            loadUpgrades();
+            
+            // Загрузка статистики
+            loadStats();
+            
+            // Настройка элементов управления
+            setupControls();
+            
+            // Запуск таймеров
+            startTimers();
+            
+            // Скрытие экрана загрузки
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                menuScreen.style.display = 'flex';
+            }, 1000);
+        }
+        
+        function initBlock() {
+            const blockData = blocks[gameState.currentBlock];
+            
+            if (!blockData) {
+                gameState.currentBlock = 0;
+                return initBlock();
+            }
+            
+            gameState.maxHealth = blockData.maxHealth;
+            
+            // Если игра только началась, устанавливаем полное здоровье
+            if (gameState.currentHealth <= 0 || gameState.currentHealth > gameState.maxHealth) {
+                gameState.currentHealth = gameState.maxHealth;
+            }
+            
+            // Создание SVG для блока
+            createBlockSVG(blockData);
+            
+            // Обновление информации о блоке
+            blockName.textContent = blockData.name;
+            blockType.textContent = blockData.type;
+            
+            // Проверка уровня
+            checkLevelRequirement();
+        }
+        
+        function createBlockSVG(blockData) {
+            const svgCode = `
+                <svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="blockShadow">
+                            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.5"/>
+                        </filter>
+                        <pattern id="blockPattern" patternUnits="userSpaceOnUse" width="20" height="20">
+                            <rect width="20" height="20" fill="${blockData.color}" opacity="0.3"/>
+                            <rect x="10" y="0" width="10" height="10" fill="${blockData.innerColor}" opacity="0.2"/>
+                            <rect x="0" y="10" width="10" height="10" fill="${blockData.innerColor}" opacity="0.2"/>
+                        </pattern>
+                    </defs>
+                    <rect width="220" height="220" fill="${blockData.color}" filter="url(#blockShadow)" rx="5"/>
+                    <rect x="20" y="20" width="180" height="180" fill="${blockData.innerColor}" rx="3"/>
+                    <rect x="10" y="10" width="200" height="200" fill="url(#blockPattern)" opacity="0.4" rx="5"/>
+                    <rect width="220" height="220" fill="none" stroke="${blockData.borderColor}" stroke-width="${blockData.borderSize}" rx="5"/>
+                </svg>
+            `;
+            
+            const svgBlob = new Blob([svgCode], {type: 'image/svg+xml'});
+            const svgUrl = URL.createObjectURL(svgBlob);
+            blockImg.src = svgUrl;
+            blockImg.style.borderColor = blockData.borderColor;
+            
+            updateCracks();
+        }
+        
+        // ============================
+        // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
+        // ============================
+        
+        function updateUI() {
+            // Обновление счетчиков
+            coinsCounter.textContent = formatNumber(gameState.coins);
+            levelCounter.textContent = `Ур. ${gameState.level}`;
+            healthDisplay.textContent = `${Math.floor(gameState.currentHealth)}/${gameState.maxHealth}`;
+            
+            // Обновление прогресс-бара
+            const healthPercent = (gameState.currentHealth / gameState.maxHealth) * 100;
+            progressBar.style.width = `${healthPercent}%`;
+            
+            // Цвет прогресс-бара в зависимости от здоровья
+            if (healthPercent > 70) {
+                progressBar.style.background = "linear-gradient(to right, #4CAF50, #8BC34A)";
+            } else if (healthPercent > 30) {
+                progressBar.style.background = "linear-gradient(to right, #FF9800, #FFC107)";
+            } else {
+                progressBar.style.background = "linear-gradient(to right, #F44336, #FF5722)";
+            }
+            
+            // Обновление статистики
+            updateStatsDisplay();
+            
+            // Обновление трещин на блоке
+            updateCracks();
+        }
+        
+        function updateCracks() {
+            const healthPercent = gameState.currentHealth / gameState.maxHealth;
+            
+            // Определяем уровень трещин
+            let crackLevel = 0;
+            if (healthPercent < 0.33) {
+                crackLevel = 2;
+            } else if (healthPercent < 0.66) {
+                crackLevel = 1;
+            } else if (healthPercent < 1) {
+                crackLevel = 0;
+            }
+            
+            // Устанавливаем прозрачность
+            const opacity = 1 - healthPercent;
+            cracksOverlay.style.opacity = opacity * 0.9;
+            
+            // Создаем трещины через SVG
+            const crackSVG = createCrackSVG(crackLevel);
+            cracksOverlay.style.backgroundImage = `url('${crackSVG}')`;
+        }
+        
+        function createCrackSVG(level) {
+            const strokeWidth = 3 + level;
+            const opacity = 0.3 + (level * 0.2);
+            
+            const svgCode = `
+                <svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M${40 + level * 10},${40 + level * 5} L${60 + level * 10},${70 + level * 5} M${80 + level * 5},${30 + level * 5} L${100 + level * 5},${60 + level * 5} M${120 + level * 10},${70 + level * 5} L${100 + level * 10},${100 + level * 5} M${50 + level * 5},${100 + level * 10} L${70 + level * 5},${130 + level * 10} M${90 + level * 10},${140 + level * 5} L${110 + level * 10},${170 + level * 5} M${130 + level * 5},${160 + level * 10} L${110 + level * 5},${190 + level * 10} M${160 + level * 10},${50 + level * 5} L${180 + level * 10},${80 + level * 5} M${180 + level * 5},${110 + level * 10} L${160 + level * 5},${140 + level * 10} M${190 + level * 10},${80 + level * 5} L${170 + level * 10},${110 + level * 5}" 
+                    stroke="#000" stroke-width="${strokeWidth}" stroke-opacity="${opacity}" fill="none"/>
+                </svg>
+            `;
+            
+            const svgBlob = new Blob([svgCode], {type: 'image/svg+xml'});
+            return URL.createObjectURL(svgBlob);
+        }
+        
+        function updateStatsDisplay() {
+            // Расчет УВС (урона в секунду)
+            const dps = calculateDPS();
+            document.getElementById('dps-counter').textContent = dps.toFixed(1);
+            
+            // Обновление статистики
+            document.getElementById('total-clicks').textContent = formatNumber(gameState.totalClicks);
+            document.getElementById('blocks-broken').textContent = formatNumber(gameState.blocksBroken);
+            
+            // Время игры
+            const totalSeconds = gameState.playTimeSeconds + Math.floor((Date.now() - gameState.startTime) / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            if (hours > 0) {
+                document.getElementById('play-time').textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                document.getElementById('play-time').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function calculateDPS() {
+            // Базовый урон от клика
+            let baseDamage = 1 * gameState.damageMultiplier;
+            
+            // Урон от автокликеров
+            let autoClickerDamage = 0;
+            gameState.autoClickers.forEach(clicker => {
+                autoClickerDamage += (clicker.damage + gameState.autoClickerDamage) / (clicker.interval / 1000);
+            });
+            
+            // Учитываем шанс критического удара
+            const critDamage = baseDamage * gameState.criticalMultiplier;
+            const averageDamage = baseDamage * (1 - gameState.criticalChance / 100) + critDamage * (gameState.criticalChance / 100);
+            
+            return averageDamage + autoClickerDamage;
+        }
+        
+        // ============================
+        // ИГРОВОЙ ПРОЦЕСС
+        // ============================
+        
+        function handleBlockClick(event) {
+            if (gameState.isBreaking) return;
+            
+            // Обновление времени последнего удара
+            gameState.lastHitTime = Date.now();
+            gameState.totalClicks++;
+            
+            // Остановка регенерации, если она активна
+            if (gameState.regenerationTimer) {
+                clearTimeout(gameState.regenerationTimer);
+                gameState.regenerationTimer = null;
+            }
+            
+            if (regenerationIndicator.style.display === 'block') {
+                regenerationIndicator.style.display = 'none';
+                block.classList.remove('regenerating');
+            }
+            
+            // Расчет урона
+            let damage = 1 * gameState.damageMultiplier;
+            let isCritical = false;
+            
+            // Проверка на критический удар
+            if (Math.random() * 100 < gameState.criticalChance) {
+                damage *= gameState.criticalMultiplier;
+                isCritical = true;
+            }
+            
+            // Применение урона
+            gameState.currentHealth -= damage;
+            gameState.totalDamage += damage;
+            
+            // Анимация удара
+            if (gameState.animationsEnabled) {
+                block.classList.add('hit');
+                setTimeout(() => {
+                    block.classList.remove('hit');
+                }, 100);
+                
+                // Показать индикатор урона
+                if (isCritical) {
+                    showDamageIndicator(event, damage, true);
+                } else {
+                    showDamageIndicator(event, damage, false);
+                }
+            }
+            
+            // Получение монет
+            const coinsEarned = getCoinsFromHit();
+            if (coinsEarned > 0) {
+                gameState.coins += coinsEarned;
+                gameState.totalCoinsEarned += coinsEarned;
+                
+                if (gameState.animationsEnabled) {
+                    showCoinAnimation(event, coinsEarned);
+                }
+            }
+            
+            // Получение опыта
+            const experienceEarned = getExperienceFromHit();
+            gameState.experience += experienceEarned;
+            
+            // Проверка на уровень
+            checkLevelUp();
+            
+            // Проверка на разрушение блока
+            if (gameState.currentHealth <= 0) {
+                destroyBlock();
+            } else {
+                updateUI();
+                
+                // Запуск таймера регенерации
+                if (gameState.regenerationEnabled && !gameState.antiRegen) {
+                    startRegenerationTimer();
+                }
+            }
+            
+            // Автосохранение
+            saveGame();
+        }
+        
+        function getCoinsFromHit() {
+            const blockData = blocks[gameState.currentBlock];
+            if (!blockData) return 0;
+            
+            // Базовое количество монет
+            const minCoins = blockData.baseCoins.min;
+            const maxCoins = blockData.baseCoins.max;
+            let coins = Math.floor(Math.random() * (maxCoins - minCoins + 1)) + minCoins;
+            
+            // Применение множителей
+            coins *= gameState.coinMultiplier;
+            coins *= gameState.luckMultiplier;
+            
+            // Шанс дополнительных монет (удача)
+            if (Math.random() * 100 < gameState.criticalChance / 2) {
+                coins *= 2;
+            }
+            
+            return Math.round(coins);
+        }
+        
+        function getExperienceFromHit() {
+            const blockData = blocks[gameState.currentBlock];
+            if (!blockData) return 0;
+            
+            let exp = blockData.experience / 10;
+            
+            // Усилители опыта
+            const expUpgrade = gameState.unlockedUpgrades.find(u => u.id === 'upgrade_experience_boost');
+            if (expUpgrade) {
+                exp *= (1 + (expUpgrade.level * 0.1));
+            }
+            
+            return Math.round(exp);
+        }
+        
+        function showDamageIndicator(event, damage, isCritical) {
+            const rect = block.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            const damageElement = document.createElement('div');
+            damageElement.className = 'damage-indicator';
+            damageElement.textContent = `-${Math.round(damage)}`;
+            damageElement.style.left = `${x}px`;
+            damageElement.style.top = `${y}px`;
+            
+            if (isCritical) {
+                damageElement.style.color = '#FFD700';
+                damageElement.style.fontSize = '1.5rem';
+            }
+            
+            block.appendChild(damageElement);
+            
+            setTimeout(() => {
+                damageElement.remove();
+            }, 1000);
+        }
+        
+        function showCoinAnimation(event, amount) {
+            const rect = block.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            const coinElement = document.createElement('div');
+            coinElement.className = 'coin-hit-animation';
+            coinElement.textContent = `+${amount}`;
+            coinElement.style.left = `${x}px`;
+            coinElement.style.top = `${y}px`;
+            
+            block.appendChild(coinElement);
+            
+            setTimeout(() => {
+                coinElement.remove();
+            }, 1000);
+        }
+        
+        function destroyBlock() {
+            gameState.isBreaking = true;
+            gameState.blocksBroken++;
+            
+            // Получение бонусных монет за разрушение
+            const blockData = blocks[gameState.currentBlock];
+            const bonusCoins = Math.floor(blockData.baseCoins.max * 3 * gameState.coinMultiplier);
+            gameState.coins += bonusCoins;
+            gameState.totalCoinsEarned += bonusCoins;
+            
+            // Получение опыта за разрушение
+            const experience = blockData.experience;
+            gameState.experience += experience;
+            
+            // Анимация разрушения
+            if (gameState.animationsEnabled) {
+                block.style.animation = 'breakBlock 0.5s forwards';
+            }
+            
+            // Переход к следующему блоку
+            setTimeout(() => {
+                gameState.currentBlock++;
+                
+                // Если дошли до последнего блока, показываем титры
+                if (gameState.currentBlock >= TOTAL_BLOCKS && !gameState.creditsShown) {
+                    showCredits();
+                    gameState.creditsShown = true;
+                    gameState.currentBlock = 0; // Начинаем сначала
+                } else if (gameState.currentBlock >= TOTAL_BLOCKS) {
+                    gameState.currentBlock = 0; // Просто начинаем сначала
+                }
+                
+                // Сброс анимации
+                block.style.animation = '';
+                gameState.isBreaking = false;
+                
+                // Инициализация нового блока
+                initBlock();
+                updateUI();
+                
+                // Проверка на уровень
+                checkLevelUp();
+                
+                // Автосохранение
+                saveGame();
+            }, 500);
+        }
+        
+        // ============================
+        // СИСТЕМА УРОВНЕЙ
+        // ============================
+        
+        function checkLevelUp() {
+            while (gameState.experience >= gameState.maxExperience) {
+                gameState.experience -= gameState.maxExperience;
+                gameState.level++;
+                gameState.maxExperience = Math.floor(gameState.maxExperience * 1.5);
+                
+                // Награда за уровень
+                const levelReward = gameState.level * 1000;
+                gameState.coins += levelReward;
+                
+                // Уведомление о новом уровне
+                if (gameState.notificationsEnabled) {
+                    showLevelUpNotification();
+                }
+            }
+            
+            updateUI();
+        }
+        
+        function checkLevelRequirement() {
+            const blockData = blocks[gameState.currentBlock];
+            
+            // Если уровень игрока меньше требуемого, откатываемся к предыдущему блоку
+            if (gameState.level < blockData.level) {
+                for (let i = gameState.currentBlock - 1; i >= 0; i--) {
+                    if (blocks[i].level <= gameState.level) {
+                        gameState.currentBlock = i;
+                        initBlock();
+                        updateUI();
+                        break;
+                    }
+                }
+            }
+        }
+        
+        function showLevelUpNotification() {
+            if (!gameState.notificationsEnabled) return;
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #4CAF50, #2E7D32);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 15px;
+                font-size: 1.5rem;
+                font-weight: bold;
+                z-index: 1000;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                animation: fadeIn 0.5s, fadeOut 0.5s 2.5s forwards;
+            `;
+            
+            notification.innerHTML = `
+                <div style="font-size: 2rem; margin-bottom: 10px;">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>Достигнут уровень ${gameState.level}!</div>
+                <div style="font-size: 1rem; margin-top: 10px; opacity: 0.8;">
+                    +${formatNumber(gameState.level * 1000)} монет
+                </div>
+            `;
+            
+            document.getElementById('game-container').appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // ============================
+        // ТИТРЫ
+        // ============================
+        
+        function showCredits() {
+            // Сохраняем состояние
+            saveGame();
+            
+            // Показываем экран титров
+            gameScreen.style.display = 'none';
+            creditsScreen.style.display = 'flex';
+            
+            // Запускаем анимацию титров
+            const creditsContent = document.getElementById('credits-content');
+            creditsContent.style.animation = 'creditsScroll 30s linear';
+            
+            // Автоматическое возвращение в меню через 35 секунд
+            setTimeout(() => {
+                creditsScreen.style.display = 'none';
+                menuScreen.style.display = 'flex';
+                creditsContent.style.animation = '';
+            }, 35000);
+        }
+        
+        // ============================
+        // РЕГЕНЕРАЦИЯ
+        // ============================
+        
+        function startRegenerationTimer() {
+            if (gameState.antiRegen || !gameState.regenerationEnabled) return;
+            
+            gameState.regenerationTimer = setTimeout(() => {
+                startRegeneration();
+            }, gameState.regenerationDelay * 1000);
+        }
+        
+        function startRegeneration() {
+            if (gameState.isBreaking || gameState.antiRegen) return;
+            
+            regenerationIndicator.style.display = 'block';
+            block.classList.add('regenerating');
+            
+            gameState.regenerationInterval = setInterval(() => {
+                if (gameState.isBreaking || gameState.antiRegen || gameState.currentHealth >= gameState.maxHealth) {
+                    stopRegeneration();
+                    return;
+                }
+                
+                gameState.currentHealth = Math.min(gameState.currentHealth + gameState.regenerationRate, gameState.maxHealth);
+                updateUI();
+                
+                regenerationIndicator.textContent = `+${gameState.regenerationRate} HP`;
+                
+                if (gameState.currentHealth >= gameState.maxHealth) {
+                    stopRegeneration();
+                }
+            }, 10000);
+        }
+        
+        function stopRegeneration() {
+            if (gameState.regenerationInterval) {
+                clearInterval(gameState.regenerationInterval);
+                gameState.regenerationInterval = null;
+            }
+            
+            regenerationIndicator.style.display = 'none';
+            block.classList.remove('regenerating');
+            
+            if (gameState.regenerationEnabled && !gameState.antiRegen) {
+                startRegenerationTimer();
+            }
+        }
+        
+        // ============================
+        // АВТОКЛИКЕРЫ
+        // ============================
+        
+        function addAutoClicker(clickerData) {
+            gameState.autoClickers.push({
+                id: clickerData.id,
+                name: clickerData.name,
+                damage: clickerData.effect.damage,
+                interval: clickerData.effect.interval
+            });
+            
+            startAutoClicker(clickerData);
+        }
+        
+        function startAutoClicker(clickerData) {
+            const intervalId = setInterval(() => {
+                if (!gameState.isBreaking) {
+                    // Создаем искусственное событие клика
+                    const rect = block.getBoundingClientRect();
+                    const event = {
+                        clientX: rect.left + rect.width / 2,
+                        clientY: rect.top + rect.height / 2
+                    };
+                    
+                    // Наносим урон
+                    const damage = clickerData.effect.damage + gameState.autoClickerDamage;
+                    gameState.currentHealth -= damage;
+                    gameState.totalDamage += damage;
+                    
+                    // Показываем уведомление
+                    if (gameState.notificationsEnabled) {
+                        const autoClickerInfo = document.getElementById('auto-clicker-info');
+                        autoClickerInfo.textContent = `${clickerData.name}: -${damage} HP`;
+                        autoClickerInfo.style.display = 'block';
+                        
+                        setTimeout(() => {
+                            autoClickerInfo.style.display = 'none';
+                        }, 1000);
+                    }
+                    
+                    // Проверка на разрушение блока
+                    if (gameState.currentHealth <= 0) {
+                        destroyBlock();
+                    } else {
+                        updateUI();
+                    }
+                }
+            }, clickerData.effect.interval);
+            
+            gameState.autoClickerIntervals.push(intervalId);
+        }
+        
+        // ============================
+        // МАГАЗИН И УЛУЧШЕНИЯ
+        // ============================
+        
+        function loadShopItems() {
+            const shopItemsContainer = document.getElementById('shop-items-container');
+            shopItemsContainer.innerHTML = '';
+            
+            shopItems.forEach(item => {
+                const isPurchased = gameState.purchasedItems[item.id];
+                const canPurchase = gameState.coins >= item.price && 
+                    (!item.requires || gameState.purchasedItems[item.requires]);
+                
+                const shopItem = document.createElement('div');
+                shopItem.className = 'shop-item';
+                shopItem.dataset.category = item.category;
+                
+                shopItem.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">
+                            <div class="item-icon" style="background-color: ${item.iconColor};">
+                                <i class="${item.icon}"></i>
+                            </div>
+                            ${item.name}
+                        </div>
+                        <div class="item-price">${formatNumber(item.price)}</div>
+                    </div>
+                    <div class="item-description">${item.description}</div>
+                    <div class="item-stats">
+                        ${item.maxLevel > 1 ? `<div class="item-level">Уровень: ${isPurchased ? isPurchased.level || 1 : 1}/${item.maxLevel}</div>` : ''}
+                        ${item.consumable ? '<div style="color: #FF9800;">Одноразовое</div>' : ''}
+                    </div>
+                    <button class="buy-btn" data-id="${item.id}" ${isPurchased && !item.consumable ? 'disabled' : !canPurchase ? 'disabled' : ''}>
+                        ${isPurchased && !item.consumable ? 
+                            `<i class="fas fa-check"></i> Куплено` : 
+                            `<i class="fas fa-shopping-cart"></i> Купить`}
+                    </button>
+                `;
+                
+                shopItemsContainer.appendChild(shopItem);
+            });
+            
+            // Фильтрация по категориям
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    // Обновление активной кнопки
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Фильтрация товаров
+                    document.querySelectorAll('.shop-item').forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+        
+        function loadUpgrades() {
+            const upgradesContainer = document.getElementById('upgrades-container');
+            upgradesContainer.innerHTML = '';
+            
+            upgrades.forEach(upgrade => {
+                const currentUpgrade = gameState.unlockedUpgrades.find(u => u.id === upgrade.id);
+                const level = currentUpgrade ? currentUpgrade.level : 0;
+                const price = Math.floor(upgrade.basePrice * Math.pow(upgrade.priceMultiplier, level));
+                const canPurchase = gameState.coins >= price && level < upgrade.maxLevel;
+                
+                const upgradeCard = document.createElement('div');
+                upgradeCard.className = 'upgrade-card';
+                
+                upgradeCard.innerHTML = `
+                    <div class="upgrade-icon">
+                        <i class="${upgrade.icon}"></i>
+                    </div>
+                    <div class="upgrade-title">${upgrade.name}</div>
+                    <div class="upgrade-description">${upgrade.description}</div>
+                    <div class="upgrade-price">${formatNumber(price)} монет</div>
+                    <div style="margin-bottom: 10px; color: #4CAF50;">
+                        Уровень: ${level}/${upgrade.maxLevel}
+                    </div>
+                    <button class="buy-btn" data-id="${upgrade.id}" ${!canPurchase ? 'disabled' : ''}>
+                        <i class="fas fa-arrow-up"></i> Улучшить
+                    </button>
+                `;
+                
+                upgradesContainer.appendChild(upgradeCard);
+            });
+        }
+        
+        function loadStats() {
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = '';
+            
+            const stats = [
+                { label: 'Всего кликов', value: gameState.totalClicks, icon: 'fas fa-mouse-pointer' },
+                { label: 'Разрушено блоков', value: gameState.blocksBroken, icon: 'fas fa-gem' },
+                { label: 'Заработано монет', value: gameState.totalCoinsEarned, icon: 'fas fa-coins' },
+                { label: 'Нанесено урона', value: Math.floor(gameState.totalDamage), icon: 'fas fa-fist-raised' },
+                { label: 'Уровень', value: gameState.level, icon: 'fas fa-level-up-alt' },
+                { label: 'Опыт', value: `${gameState.experience}/${gameState.maxExperience}`, icon: 'fas fa-star' },
+                { label: 'УВС (урон/сек)', value: calculateDPS().toFixed(1), icon: 'fas fa-tachometer-alt' },
+                { label: 'Время игры', value: formatTime(gameState.playTimeSeconds), icon: 'fas fa-clock' },
+                { label: 'Автокликеров', value: gameState.autoClickers.length, icon: 'fas fa-robot' },
+                { label: 'Улучшений', value: gameState.unlockedUpgrades.length, icon: 'fas fa-cogs' }
+            ];
+            
+            stats.forEach(stat => {
+                const statCard = document.createElement('div');
+                statCard.className = 'stat-card';
+                
+                statCard.innerHTML = `
+                    <div style="font-size: 1.5rem; color: #4CAF50; margin-bottom: 5px;">
+                        <i class="${stat.icon}"></i>
+                    </div>
+                    <div class="stat-card-value">${typeof stat.value === 'number' ? formatNumber(stat.value) : stat.value}</div>
+                    <div class="stat-card-label">${stat.label}</div>
+                `;
+                
+                statsContainer.appendChild(statCard);
+            });
+        }
+        
+        function purchaseItem(itemId) {
+            const item = shopItems.find(i => i.id === itemId);
+            if (!item) return false;
+            
+            // Проверка уже купленного
+            if (gameState.purchasedItems[itemId] && !item.consumable) {
+                alert('Этот предмет уже куплен!');
+                return false;
+            }
+            
+            // Проверка требований
+            if (item.requires && !gameState.purchasedItems[item.requires]) {
+                alert(`Сначала нужно купить: ${shopItems.find(i => i.id === item.requires).name}`);
+                return false;
+            }
+            
+            // Проверка цены
+            if (gameState.coins < item.price) {
+                alert('Недостаточно монет!');
+                return false;
+            }
+            
+            // Покупка
+            gameState.coins -= item.price;
+            
+            // Применение эффекта
+            applyItemEffect(item);
+            
+            // Сохранение информации о покупке
+            if (item.consumable) {
+                // Для расходуемых предметов увеличиваем счетчик
+                if (!gameState.purchasedItems[itemId]) {
+                    gameState.purchasedItems[itemId] = { count: 1 };
+                } else {
+                    gameState.purchasedItems[itemId].count++;
+                }
+            } else {
+                // Для постоянных предметов
+                if (item.maxLevel > 1) {
+                    if (!gameState.purchasedItems[itemId]) {
+                        gameState.purchasedItems[itemId] = { level: 1 };
+                    } else {
+                        gameState.purchasedItems[itemId].level++;
+                    }
+                } else {
+                    gameState.purchasedItems[itemId] = true;
+                }
+            }
+            
+            // Обновление интерфейса
+            updateUI();
+            loadShopItems();
+            
+            // Автосохранение
+            saveGame();
+            
+            return true;
+        }
+        
+        function applyItemEffect(item) {
+            switch (item.effect.type) {
+                case 'autoClicker':
+                    addAutoClicker(item);
+                    break;
+                    
+                case 'damageMultiplier':
+                    gameState.damageMultiplier *= item.effect.value;
+                    break;
+                    
+                case 'coinMultiplier':
+                    gameState.coinMultiplier *= item.effect.value;
+                    break;
+                    
+                case 'critical':
+                    gameState.criticalChance += item.effect.chance;
+                    gameState.criticalMultiplier *= item.effect.multiplier;
+                    break;
+                    
+                case 'luck':
+                    gameState.luckMultiplier *= item.effect.value;
+                    break;
+                    
+                case 'antiRegen':
+                    gameState.antiRegen = true;
+                    stopRegeneration();
+                    break;
+                    
+                case 'instantBreak':
+                    gameState.currentHealth = 0;
+                    destroyBlock();
+                    break;
+                    
+                case 'blockSkip':
+                    gameState.currentBlock++;
+                    if (gameState.currentBlock >= TOTAL_BLOCKS) {
+                        gameState.currentBlock = 0;
+                    }
+                    initBlock();
+                    updateUI();
+                    break;
+            }
+        }
+        
+        function purchaseUpgrade(upgradeId) {
+            const upgrade = upgrades.find(u => u.id === upgradeId);
+            if (!upgrade) return false;
+            
+            const currentUpgrade = gameState.unlockedUpgrades.find(u => u.id === upgradeId);
+            const level = currentUpgrade ? currentUpgrade.level : 0;
+            
+            // Проверка максимального уровня
+            if (level >= upgrade.maxLevel) {
+                alert('Достигнут максимальный уровень улучшения!');
+                return false;
+            }
+            
+            // Расчет цены
+            const price = Math.floor(upgrade.basePrice * Math.pow(upgrade.priceMultiplier, level));
+            
+            // Проверка монет
+            if (gameState.coins < price) {
+                alert('Недостаточно монет!');
+                return false;
+            }
+            
+            // Покупка
+            gameState.coins -= price;
+            
+            // Применение улучшения
+            applyUpgradeEffect(upgrade, level + 1);
+            
+            // Обновление информации об улучшении
+            if (currentUpgrade) {
+                currentUpgrade.level++;
+            } else {
+                gameState.unlockedUpgrades.push({
+                    id: upgradeId,
+                    level: 1
+                });
+            }
+            
+            // Обновление интерфейса
+            updateUI();
+            loadUpgrades();
+            
+            // Автосохранение
+            saveGame();
+            
+            return true;
+        }
+        
+        function applyUpgradeEffect(upgrade, level) {
+            switch (upgrade.effect.type) {
+                case 'baseDamage':
+                    gameState.damageMultiplier += upgrade.effect.value * level;
+                    break;
+                    
+                case 'coinValue':
+                    gameState.coinMultiplier += upgrade.effect.value * level;
+                    break;
+                    
+                case 'criticalChance':
+                    gameState.criticalChance += upgrade.effect.value * level;
+                    break;
+                    
+                case 'criticalMultiplier':
+                    gameState.criticalMultiplier += upgrade.effect.value * level;
+                    break;
+                    
+                case 'autoClickerDamage':
+                    gameState.autoClickerDamage += upgrade.effect.value * level;
+                    break;
+                    
+                case 'regenDelay':
+                    gameState.regenerationDelay += upgrade.effect.value * level;
+                    break;
+                    
+                case 'blockHealth':
+                    // Уменьшение здоровья блоков (эффект применяется при создании блока)
+                    break;
+                    
+                case 'experienceMultiplier':
+                    // Умножение опыта (уже учтено в getExperienceFromHit)
+                    break;
+            }
+        }
+        
+        // ============================
+        // УТИЛИТЫ И ФОРМАТИРОВАНИЕ
+        // ============================
+        
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+        
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            if (hours > 0) {
+                return `${hours}ч ${minutes}м`;
+            } else if (minutes > 0) {
+                return `${minutes}м ${secs}с`;
+            } else {
+                return `${secs}с`;
+            }
+        }
+        
+        // ============================
+        // УПРАВЛЕНИЕ И НАСТРОЙКИ
+        // ============================
+        
+        function setupControls() {
+            // Навигация
+            continueBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                initBlock();
+                updateUI();
+            });
+            
+            newGameBtn.addEventListener('click', () => {
+                document.getElementById('new-game-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('confirm-new-game-btn').addEventListener('click', () => {
+                // Сброс состояния игры
+                gameState = {
+                    coins: 0,
+                    level: 1,
+                    experience: 0,
+                    maxExperience: 100,
+                    currentBlock: 0,
+                    currentHealth: 0,
+                    maxHealth: 0,
+                    
+                    totalClicks: 0,
+                    blocksBroken: 0,
+                    totalCoinsEarned: 0,
+                    totalDamage: 0,
+                    playTimeSeconds: 0,
+                    startTime: Date.now(),
+                    lastSaveTime: Date.now(),
+                    
+                    damageMultiplier: 1,
+                    coinMultiplier: 1,
+                    criticalChance: 5,
+                    criticalMultiplier: 2,
+                    luckMultiplier: 1,
+                    
+                    autoClickers: [],
+                    autoClickerDamage: 0,
+                    
+                    regenerationEnabled: true,
+                    regenerationRate: 10,
+                    regenerationDelay: 30,
+                    antiRegen: false,
+                    
+                    soundEnabled: gameState.soundEnabled,
+                    notificationsEnabled: gameState.notificationsEnabled,
+                    autosaveEnabled: gameState.autosaveEnabled,
+                    animationsEnabled: gameState.animationsEnabled,
+                    
+                    purchasedItems: {},
+                    unlockedUpgrades: [],
+                    
+                    isBreaking: false,
+                    isTouching: false,
+                    lastHitTime: Date.now(),
+                    regenerationTimer: null,
+                    regenerationInterval: null,
+                    autoClickerIntervals: [],
+                    playTimer: null,
+                    saveInterval: null,
+                    
+                    creditsShown: false
+                };
+                
+                document.getElementById('new-game-modal').style.display = 'none';
+                clearSave();
+                menuScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                initBlock();
+                updateUI();
+            });
+            
+            document.getElementById('cancel-new-game-btn').addEventListener('click', () => {
+                document.getElementById('new-game-modal').style.display = 'none';
+            });
+            
+            statsMenuBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                statsScreen.style.display = 'flex';
+                loadStats();
+            });
+            
+            shopMenuBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                shopScreen.style.display = 'flex';
+                loadShopItems();
+            });
+            
+            upgradesMenuBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                upgradesScreen.style.display = 'flex';
+                loadUpgrades();
+            });
+            
+            settingsMenuBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                settingsScreen.style.display = 'flex';
+            });
+            
+            // Кнопки в игре
+            gameShopBtn.addEventListener('click', () => {
+                gameScreen.style.display = 'none';
+                shopScreen.style.display = 'flex';
+                loadShopItems();
+            });
+            
+            gameUpgradesBtn.addEventListener('click', () => {
+                gameScreen.style.display = 'none';
+                upgradesScreen.style.display = 'flex';
+                loadUpgrades();
+            });
+            
+            gameStatsBtn.addEventListener('click', () => {
+                gameScreen.style.display = 'none';
+                statsScreen.style.display = 'flex';
+                loadStats();
+            });
+            
+            gameMenuBtn.addEventListener('click', () => {
+                gameScreen.style.display = 'none';
+                menuScreen.style.display = 'flex';
+                saveGame();
+            });
+            
+            // Кнопки назад
+            document.getElementById('shop-back-btn').addEventListener('click', () => {
+                shopScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+            });
+            
+            document.getElementById('upgrades-back-btn').addEventListener('click', () => {
+                upgradesScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+            });
+            
+            document.getElementById('stats-back-btn').addEventListener('click', () => {
+                statsScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+            });
+            
+            document.getElementById('settings-back-btn').addEventListener('click', () => {
+                settingsScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+            });
+            
+            creditsBackBtn.addEventListener('click', () => {
+                creditsScreen.style.display = 'none';
+                menuScreen.style.display = 'flex';
+                const creditsContent = document.getElementById('credits-content');
+                creditsContent.style.animation = '';
+            });
+            
+            // Конфиденциальность
+            privacyBtn.addEventListener('click', () => {
+                document.getElementById('privacy-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+                document.getElementById('privacy-modal').style.display = 'none';
+            });
+            
+            // Настройки
+            document.getElementById('sound-toggle').checked = gameState.soundEnabled;
+            document.getElementById('notifications-toggle').checked = gameState.notificationsEnabled;
+            document.getElementById('autosave-toggle').checked = gameState.autosaveEnabled;
+            document.getElementById('animations-toggle').checked = gameState.animationsEnabled;
+            
+            document.getElementById('sound-toggle').addEventListener('change', () => {
+                gameState.soundEnabled = document.getElementById('sound-toggle').checked;
+                saveGame();
+            });
+            
+            document.getElementById('notifications-toggle').addEventListener('change', () => {
+                gameState.notificationsEnabled = document.getElementById('notifications-toggle').checked;
+                saveGame();
+            });
+            
+            document.getElementById('autosave-toggle').addEventListener('change', () => {
+                gameState.autosaveEnabled = document.getElementById('autosave-toggle').checked;
+                saveGame();
+            });
+            
+            document.getElementById('animations-toggle').addEventListener('change', () => {
+                gameState.animationsEnabled = document.getElementById('animations-toggle').checked;
+                saveGame();
+            });
+            
+            document.getElementById('clear-data-btn').addEventListener('click', () => {
+                document.getElementById('clear-data-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('confirm-clear-data-btn').addEventListener('click', () => {
+                clearSave();
+                document.getElementById('clear-data-modal').style.display = 'none';
+                alert('Все данные игры удалены!');
+                location.reload();
+            });
+            
+            document.getElementById('cancel-clear-data-btn').addEventListener('click', () => {
+                document.getElementById('clear-data-modal').style.display = 'none';
+            });
+            
+            document.getElementById('about-btn').addEventListener('click', () => {
+                document.getElementById('about-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('close-about-modal-btn').addEventListener('click', () => {
+                document.getElementById('about-modal').style.display = 'none';
+            });
+            
+            // Закрытие модальных окон при клике вне их
+            window.addEventListener('click', (event) => {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            // Обработка кликов по блоку
+            block.addEventListener('mousedown', (event) => {
+                if (!gameState.isTouching) {
+                    gameState.isTouching = true;
+                    handleBlockClick(event);
+                }
+            });
+            
+            block.addEventListener('mouseup', () => {
+                gameState.isTouching = false;
+            });
+            
+            block.addEventListener('mouseleave', () => {
+                gameState.isTouching = false;
+            });
+            
+            // Обработка касаний для мобильных устройств
+            block.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!gameState.isTouching) {
+                    gameState.isTouching = true;
+                    const touch = e.touches[0];
+                    const event = {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    };
+                    handleBlockClick(event);
+                }
+            });
+            
+            block.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                gameState.isTouching = false;
+            });
+            
+            block.addEventListener('touchcancel', () => {
+                gameState.isTouching = false;
+            });
+            
+            // Покупка товаров в магазине
+            document.getElementById('shop-items-container').addEventListener('click', (e) => {
+                const buyBtn = e.target.closest('.buy-btn');
+                if (buyBtn && !buyBtn.disabled) {
+                    const itemId = buyBtn.dataset.id;
+                    const success = purchaseItem(itemId);
+                    
+                    if (success) {
+                        alert('Покупка успешна!');
+                    }
+                }
+            });
+            
+            // Покупка улучшений
+            document.getElementById('upgrades-container').addEventListener('click', (e) => {
+                const buyBtn = e.target.closest('.buy-btn');
+                if (buyBtn && !buyBtn.disabled) {
+                    const upgradeId = buyBtn.dataset.id;
+                    const success = purchaseUpgrade(upgradeId);
+                    
+                    if (success) {
+                        alert('Улучшение приобретено!');
+                    }
+                }
+            });
+            
+            // Предотвращение контекстного меню
+            block.addEventListener('contextmenu', (e) => e.preventDefault());
+        }
+        
+        // ============================
+        // ТАЙМЕРЫ
+        // ============================
+        
+        function startTimers() {
+            // Таймер игры (обновление времени)
+            gameState.playTimer = setInterval(() => {
+                updateStatsDisplay();
+            }, 1000);
+            
+            // Автосохранение каждые 30 секунд
+            gameState.saveInterval = setInterval(() => {
+                saveGame();
+            }, 30000);
+            
+            // Запуск автокликеров
+            gameState.autoClickers.forEach(clicker => {
+                const item = shopItems.find(i => i.id === clicker.id);
+                if (item) {
+                    startAutoClicker(item);
+                }
+            });
+            
+            // Запуск регенерации, если нужно
+            if (gameState.regenerationEnabled && !gameState.antiRegen) {
+                startRegenerationTimer();
+            }
+        }
+        
+        // ============================
+        // ЗАПУСК ИГРЫ
+        // ============================
+        
+        // Инициализация при загрузке страницы
+        window.addEventListener('DOMContentLoaded', initGame);
+        
+        // Автосохранение при закрытии страницы
+        window.addEventListener('beforeunload', () => {
+            saveGame();
+        });
+        
+        // Предотвращение закрытия страницы без сохранения
+        window.addEventListener('unload', () => {
+            saveGame();
+        });
+    </script>
+</body>
+  </html>
