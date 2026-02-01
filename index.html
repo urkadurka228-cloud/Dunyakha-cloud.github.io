@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Minecraft Clicker Pro</title>
+    <title>Block Miner Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -50,7 +50,6 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
         
-        /* Загрузочный экран */
         #loading-screen {
             position: absolute;
             width: 100%;
@@ -80,7 +79,6 @@
             animation: pulse 1.5s infinite;
         }
         
-        /* Меню */
         #menu-screen {
             position: absolute;
             width: 100%;
@@ -101,7 +99,7 @@
             text-align: center;
             text-shadow: 3px 3px 0 var(--block-border), 5px 5px 0 #000;
             letter-spacing: 2px;
-            font-family: 'Minecraft', monospace;
+            font-family: monospace;
             animation: titleGlow 3s infinite alternate;
         }
         
@@ -234,7 +232,6 @@
             font-size: 0.8rem;
         }
         
-        /* Игровой экран */
         #game-screen {
             position: absolute;
             width: 100%;
@@ -353,7 +350,7 @@
             color: #fff;
             margin-bottom: 5px;
             text-shadow: 2px 2px 0 #000;
-            font-family: 'Minecraft', monospace;
+            font-family: monospace;
         }
         
         .block-type {
@@ -520,8 +517,8 @@
         
         .stat-value {
             font-size: 1.2rem;
-            font-weight: bold;
             color: var(--gold-color);
+            font-weight: bold;
         }
         
         .stat-label {
@@ -591,7 +588,6 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
         
-        /* Магазин */
         #shop-screen, #stats-screen, #settings-screen, #credits-screen, #achievements-screen {
             position: absolute;
             width: 100%;
@@ -618,7 +614,7 @@
         .screen-title {
             font-size: 2rem;
             color: var(--gold-color);
-            font-family: 'Minecraft', monospace;
+            font-family: monospace;
             text-shadow: 2px 2px 0 #000;
         }
         
@@ -643,7 +639,6 @@
             box-shadow: 0 5px 0 #b71c1c;
         }
         
-        /* ЭКРАН ДОСТИЖЕНИЙ */
         .achievements-container {
             flex-grow: 1;
             overflow-y: auto;
@@ -794,7 +789,6 @@
             color: #666;
         }
         
-        /* Новые стили для сложных достижений */
         .achievement-epic {
             border-color: var(--epic-color) !important;
             background: linear-gradient(45deg, rgba(156, 39, 176, 0.2), rgba(123, 31, 162, 0.1));
@@ -828,7 +822,6 @@
             background: linear-gradient(45deg, rgba(255, 64, 129, 0.3), rgba(194, 24, 91, 0.2));
         }
         
-        /* Магазин */
         .shop-categories {
             display: flex;
             gap: 10px;
@@ -964,7 +957,6 @@
             white-space: nowrap;
         }
         
-        /* Статистика */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -999,7 +991,6 @@
             color: #ccc;
         }
         
-        /* Настройки */
         .settings-container {
             display: flex;
             flex-direction: column;
@@ -1089,7 +1080,6 @@
             animation: slideUp 0.3s, fadeOut 0.3s 1.7s forwards;
         }
         
-        /* Титры */
         .credits-content {
             flex-grow: 1;
             display: flex;
@@ -1150,7 +1140,6 @@
             animation: fadeIn 1s 2s backwards;
         }
         
-        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1261,7 +1250,6 @@
             10%, 90% { opacity: 1; }
         }
         
-        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -1332,8 +1320,7 @@
             color: white;
         }
         
-        /* Фон */
-        .minecraft-bg {
+        .block-bg {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -1390,7 +1377,6 @@
             100% { transform: translateX(calc(100vw + 200px)); }
         }
         
-        /* Адаптивность */
         @media (max-width: 500px) {
             .block {
                 width: 200px;
@@ -1453,7 +1439,6 @@
             }
         }
         
-        /* Новые классы для улучшений */
         .shop-item-level {
             display: flex;
             align-items: center;
@@ -1478,7 +1463,6 @@
             transition: width 0.3s;
         }
         
-        /* Прогресс на панели достижений */
         .progress-achievement {
             display: inline-block;
             background: rgba(255,255,255,0.1);
@@ -1492,22 +1476,19 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- Фон -->
-        <div class="minecraft-bg"></div>
+        <div class="block-bg"></div>
         <div class="cloud"></div>
         <div class="cloud"></div>
         <div class="cloud"></div>
         <div class="ground"></div>
         
-        <!-- Загрузочный экран -->
         <div id="loading-screen">
             <div class="loading-spinner"></div>
             <div class="loading-text">Загрузка игры...</div>
         </div>
         
-        <!-- Экран меню -->
         <div id="menu-screen">
-            <h1 class="menu-title">MINECRAFT CLICKER PRO</h1>
+            <h1 class="menu-title">BLOCK MINER PRO</h1>
             <div class="menu-buttons">
                 <button class="menu-btn continue-btn" id="continue-btn">
                     <i class="fas fa-play"></i> Продолжить
@@ -1519,10 +1500,7 @@
                     <i class="fas fa-chart-bar"></i> Статистика
                 </button>
                 <button class="menu-btn achievements-btn" id="achievements-menu-btn">
-                    <i class="fas fa-trophy"></i> Достижения <span id="achievements-count" class="progress-achievement">0/81</span>
-                </button>
-                <button class="menu-btn" id="shop-menu-btn">
-                    <i class="fas fa-shopping-cart"></i> Магазин
+                    <i class="fas fa-trophy"></i> Достижения <span id="achievements-count" class="progress-achievement">0/33</span>
                 </button>
                 <button class="menu-btn settings-btn" id="settings-menu-btn">
                     <i class="fas fa-cog"></i> Настройки
@@ -1532,7 +1510,6 @@
             <div class="version">Версия 4.0</div>
         </div>
         
-        <!-- Игровой экран -->
         <div id="game-screen">
             <div class="game-header">
                 <div class="coins-container">
@@ -1599,7 +1576,6 @@
             <div class="auto-clicker-info" id="auto-clicker-info"></div>
         </div>
         
-        <!-- Магазин -->
         <div id="shop-screen">
             <div class="screen-header">
                 <h2 class="screen-title">Магазин</h2>
@@ -1617,11 +1593,9 @@
             </div>
             
             <div class="shop-items" id="shop-items-container">
-                <!-- Товары будут загружены через JavaScript -->
             </div>
         </div>
         
-        <!-- Статистика -->
         <div id="stats-screen">
             <div class="screen-header">
                 <h2 class="screen-title">Статистика</h2>
@@ -1631,14 +1605,12 @@
             </div>
             
             <div class="stats-container" id="stats-container">
-                <!-- Статистика будет загружена через JavaScript -->
             </div>
         </div>
         
-        <!-- ДОСТИЖЕНИЯ -->
         <div id="achievements-screen">
             <div class="screen-header">
-                <h2 class="screen-title">Достижения <span id="total-achievements" style="font-size: 1.2rem;">(0/81)</span></h2>
+                <h2 class="screen-title">Достижения <span id="total-achievements" style="font-size: 1.2rem;">(0/33)</span></h2>
                 <button class="back-btn" id="achievements-back-btn">
                     <i class="fas fa-arrow-left"></i> Назад
                 </button>
@@ -1651,16 +1623,13 @@
                 <button class="category-btn" data-category="combat">Бой</button>
                 <button class="category-btn" data-category="shop">Магазин</button>
                 <button class="category-btn" data-category="misc">Разное</button>
-                <button class="category-btn" data-category="advanced">Сложные</button>
                 <button class="category-btn" data-category="secret">Секретные</button>
             </div>
             
             <div class="achievements-container" id="achievements-container">
-                <!-- Достижения будут загружены через JavaScript -->
             </div>
         </div>
         
-        <!-- Настройки -->
         <div id="settings-screen">
             <div class="screen-header">
                 <h2 class="screen-title">Настройки</h2>
@@ -1748,58 +1717,37 @@
             </div>
         </div>
         
-        <!-- Титры -->
         <div id="credits-screen">
             <div class="screen-header">
                 <h2 class="screen-title">Титры</h2>
             </div>
             
             <div class="credits-content" id="credits-content">
-                <div class="credits-title">Minecraft Clicker Pro</div>
+                <div class="credits-title">Block Miner Pro</div>
                 
                 <div class="credit-item" style="animation-delay: 0s;">
                     <div class="credit-role">Автор игры</div>
-                    <div class="credit-name">Данил Фардтдинов</div>
+                    <div class="credit-name">Команда разработчиков</div>
                 </div>
                 
                 <div class="credit-item" style="animation-delay: 3s;">
                     <div class="credit-role">Идея игры</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
+                    <div class="credit-name">Команда разработчиков</div>
                 </div>
                 
                 <div class="credit-item" style="animation-delay: 6s;">
                     <div class="credit-role">Разработка</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
+                    <div class="credit-name">Команда разработчиков</div>
                 </div>
                 
                 <div class="credit-item" style="animation-delay: 9s;">
                     <div class="credit-role">Дизайн</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
+                    <div class="credit-name">Команда разработчиков</div>
                 </div>
                 
                 <div class="credit-item" style="animation-delay: 12s;">
                     <div class="credit-role">Программирование</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
-                </div>
-                
-                <div class="credit-item" style="animation-delay: 15s;">
-                    <div class="credit-role">Тестирование</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
-                </div>
-                
-                <div class="credit-item" style="animation-delay: 18s;">
-                    <div class="credit-role">Звуковое оформление</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
-                </div>
-                
-                <div class="credit-item" style="animation-delay: 21s;">
-                    <div class="credit-role">Геймдизайн</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
-                </div>
-                
-                <div class="credit-item" style="animation-delay: 24s;">
-                    <div class="credit-role">Продюсирование</div>
-                    <div class="credit-name">Данила Фардтдинов</div>
+                    <div class="credit-name">Команда разработчиков</div>
                 </div>
                 
                 <div class="final-thanks">СПАСИБО ЗА ВНИМАНИЕ!</div>
@@ -1810,12 +1758,11 @@
             </button>
         </div>
         
-        <!-- Модальные окна -->
         <div class="modal" id="privacy-modal">
             <div class="modal-content">
                 <h2 class="modal-title">Политика конфиденциальности</h2>
                 <div class="modal-text">
-                    <p><strong>Minecraft Clicker Pro</strong> - это браузерная игра, которая работает полностью локально на вашем устройстве.</p>
+                    <p><strong>Block Miner Pro</strong> - это браузерная игра, которая работает полностью локально на вашем устройстве.</p>
                     
                     <h3 style="color: var(--gold-color); margin-top: 15px;">Какие данные мы собираем?</h3>
                     <p>✅ <strong>Никакие данные не собираются</strong> - игра не отправляет информацию на серверы</p>
@@ -1887,11 +1834,11 @@
             <div class="modal-content">
                 <h2 class="modal-title">О игре</h2>
                 <div class="modal-text">
-                    <p><strong>Minecraft Clicker Pro v4.0</strong> - улучшенная версия классического кликера с тематикой Minecraft.</p>
+                    <p><strong>Block Miner Pro v4.0</strong> - улучшенная версия классического кликера с тематикой добычи блоков.</p>
                     
                     <h3 style="color: var(--gold-color); margin-top: 15px;">Новые функции в версии 4.0:</h3>
                     <ul style="margin-left: 20px; margin-bottom: 15px;">
-                        <li>81 достижение с реальным отслеживанием прогресса</li>
+                        <li>31 достижения с реальным отслеживанием прогресса</li>
                         <li>Автокликеры до 7 уровня</li>
                         <li>Бустеры силы удара до 7 уровня</li>
                         <li>Бустеры удачи до 7 уровня</li>
@@ -1911,8 +1858,6 @@
                     
                     <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
                         Версия: 4.0<br>
-                        Автор: Данил Фардтдинов<br>
-                        Идея: Данила Фардтдинов<br>
                         Создано с использованием HTML5, CSS3 и JavaScript
                     </p>
                 </div>
@@ -1922,37 +1867,28 @@
             </div>
         </div>
         
-        <!-- Lucky Block уведомление -->
         <div class="lucky-notification" id="lucky-notification">
             <i class="fas fa-star"></i><br>
             LUCKY BLOCK!<br>
             <span style="font-size: 1.2rem;">+5,000 монет</span>
         </div>
         
-        <!-- Уведомление о сохранении -->
         <div class="save-notification" id="save-notification">
             <i class="fas fa-check-circle"></i> Игра сохранена!
         </div>
         
-        <!-- Уведомление о достижении -->
         <div class="save-notification" id="achievement-notification" style="background: linear-gradient(45deg, #FF9800, #F57C00); top: 20px; bottom: auto;">
             <i class="fas fa-trophy"></i> Новое достижение!
         </div>
         
-        <!-- Уведомление о сложном достижении -->
         <div class="save-notification" id="epic-achievement-notification" style="background: linear-gradient(45deg, #9C27B0, #7B1FA2); top: 60px; bottom: auto;">
             <i class="fas fa-crown"></i> Эпическое достижение!
         </div>
     </div>
 
     <script>
-        // ============================
-        // ОСНОВНЫЕ ПЕРЕМЕННЫЕ
-        // ============================
-        
         const SAVE_VERSION = '4.0';
         
-        // Элементы DOM
         const loadingScreen = document.getElementById('loading-screen');
         const menuScreen = document.getElementById('menu-screen');
         const gameScreen = document.getElementById('game-screen');
@@ -1965,16 +1901,7 @@
         const achievementNotification = document.getElementById('achievement-notification');
         const epicAchievementNotification = document.getElementById('epic-achievement-notification');
         
-        // ============================
-        // СИСТЕМА ДОСТИЖЕНИЙ (81 ДОСТИЖЕНИЕ)
-        // ============================
-        
         const achievementsData = [
-            // ============================
-            // 40 СТАРЫХ ДОСТИЖЕНИЙ
-            // ============================
-            
-            // Категория: Блоки
             {
                 id: 'first_block',
                 name: 'Первая добыча',
@@ -2052,8 +1979,6 @@
                 reward: { coins: 1000, multiplier: 1.1 },
                 hidden: false
             },
-            
-            // Категория: Монеты
             {
                 id: 'coins_100',
                 name: 'Первые монеты',
@@ -2098,19 +2023,6 @@
                 reward: { coins: 5000, multiplier: 1.2 },
                 hidden: false
             },
-            {
-                id: 'coins_100000',
-                name: 'Миллионер',
-                description: 'Заработай 100,000 монет',
-                category: 'coins',
-                icon: 'fas fa-crown',
-                iconColor: '#FFD700',
-                requirement: { type: 'total_coins', value: 100000 },
-                reward: { coins: 10000, multiplier: 1.2 },
-                hidden: false
-            },
-            
-            // Категория: Бой
             {
                 id: 'click_10',
                 name: 'Первый кликер',
@@ -2188,8 +2100,6 @@
                 reward: { coins: 500, multiplier: 1.1 },
                 hidden: false
             },
-            
-            // Категория: Магазин
             {
                 id: 'first_purchase',
                 name: 'Первая покупка',
@@ -2210,17 +2120,6 @@
                 iconColor: '#9C27B0',
                 requirement: { type: 'items_purchased', value: 5 },
                 reward: { coins: 1000, multiplier: 1.1 },
-                hidden: false
-            },
-            {
-                id: 'shop_10',
-                name: 'Верный покупатель',
-                description: 'Купи 10 предметов в магазине',
-                category: 'shop',
-                icon: 'fas fa-shopping-basket',
-                iconColor: '#9C27B0',
-                requirement: { type: 'items_purchased', value: 10 },
-                reward: { coins: 2000, multiplier: 1.1 },
                 hidden: false
             },
             {
@@ -2245,8 +2144,6 @@
                 reward: { coins: 2000, multiplier: 1.2 },
                 hidden: false
             },
-            
-            // Категория: Разное
             {
                 id: 'play_5min',
                 name: 'Пять минут игры',
@@ -2313,8 +2210,6 @@
                 reward: { coins: 10000, multiplier: 1.3 },
                 hidden: false
             },
-            
-            // Категория: Секретные
             {
                 id: 'combo_20',
                 name: 'Мастер комбо',
@@ -2347,512 +2242,8 @@
                 requirement: { type: 'all_blocks', value: 15 },
                 reward: { coins: 3000, multiplier: 1.2 },
                 hidden: true
-            },
-            
-            // ============================
-            // 41 НОВЫХ СЛОЖНЫХ ДОСТИЖЕНИЯ
-            // ============================
-            
-            // Категория: Advanced - Эпические вызовы
-            {
-                id: 'block_1000',
-                name: 'Великий разрушитель',
-                description: 'Разрушь 1,000 блоков',
-                category: 'advanced',
-                icon: 'fas fa-mountain',
-                iconColor: '#9C27B0',
-                requirement: { type: 'blocks_broken', value: 1000 },
-                reward: { coins: 10000, multiplier: 1.3 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'block_5000',
-                name: 'Неутомимый шахтер',
-                description: 'Разрушь 5,000 блоков',
-                category: 'advanced',
-                icon: 'fas fa-digging',
-                iconColor: '#9C27B0',
-                requirement: { type: 'blocks_broken', value: 5000 },
-                reward: { coins: 50000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'coins_1m',
-                name: 'Магнат',
-                description: 'Заработай 1,000,000 монет',
-                category: 'advanced',
-                icon: 'fas fa-money-check-alt',
-                iconColor: '#FFD700',
-                requirement: { type: 'total_coins', value: 1000000 },
-                reward: { coins: 100000, multiplier: 1.5 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'coins_10m',
-                name: 'Империя',
-                description: 'Заработай 10,000,000 монет',
-                category: 'advanced',
-                icon: 'fas fa-crown',
-                iconColor: '#FFD700',
-                requirement: { type: 'total_coins', value: 10000000 },
-                reward: { coins: 500000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            {
-                id: 'click_100k',
-                name: 'Неутомимый палец',
-                description: 'Сделай 100,000 кликов',
-                category: 'advanced',
-                icon: 'fas fa-hand-sparkles',
-                iconColor: '#2196F3',
-                requirement: { type: 'total_clicks', value: 100000 },
-                reward: { coins: 50000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'click_1m',
-                name: 'Кликовый бог',
-                description: 'Сделай 1,000,000 кликов',
-                category: 'advanced',
-                icon: 'fas fa-hand-rock',
-                iconColor: '#2196F3',
-                requirement: { type: 'total_clicks', value: 1000000 },
-                reward: { coins: 250000, multiplier: 1.8 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'damage_1m',
-                name: 'Разрушитель миров',
-                description: 'Нанеси 1,000,000 урона',
-                category: 'advanced',
-                icon: 'fas fa-skull-crossbones',
-                iconColor: '#F44336',
-                requirement: { type: 'total_damage', value: 1000000 },
-                reward: { coins: 100000, multiplier: 1.6 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'damage_10m',
-                name: 'Апокалипсис',
-                description: 'Нанеси 10,000,000 урона',
-                category: 'advanced',
-                icon: 'fas fa-meteor',
-                iconColor: '#F44336',
-                requirement: { type: 'total_damage', value: 10000000 },
-                reward: { coins: 500000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            
-            // Категория: Advanced - Монстры прогресса
-            {
-                id: 'stage_50',
-                name: 'Повелитель стадий',
-                description: 'Достигни 50 стадии',
-                category: 'advanced',
-                icon: 'fas fa-chess-queen',
-                iconColor: '#9C27B0',
-                requirement: { type: 'stage_reached', value: 50 },
-                reward: { coins: 50000, multiplier: 1.5 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'stage_100',
-                name: 'Бессмертный',
-                description: 'Достигни 100 стадии',
-                category: 'advanced',
-                icon: 'fas fa-infinity',
-                iconColor: '#FF4081',
-                requirement: { type: 'stage_reached', value: 100 },
-                reward: { coins: 250000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            {
-                id: 'play_24h',
-                name: 'Суточный марафон',
-                description: 'Играй 24 часа',
-                category: 'advanced',
-                icon: 'fas fa-calendar-day',
-                iconColor: '#FF9800',
-                requirement: { type: 'play_time', value: 86400 },
-                reward: { coins: 50000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'play_7d',
-                name: 'Неделя в шахте',
-                description: 'Играй 7 дней',
-                category: 'advanced',
-                icon: 'fas fa-calendar-week',
-                iconColor: '#9C27B0',
-                requirement: { type: 'play_time', value: 604800 },
-                reward: { coins: 150000, multiplier: 1.7 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'play_30d',
-                name: 'Месяц посвящения',
-                description: 'Играй 30 дней',
-                category: 'advanced',
-                icon: 'fas fa-calendar-alt',
-                iconColor: '#FF4081',
-                requirement: { type: 'play_time', value: 2592000 },
-                reward: { coins: 500000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            
-            // Категория: Advanced - Мастерство
-            {
-                id: 'critical_1000',
-                name: 'Критический гений',
-                description: 'Нанеси 1,000 критических ударов',
-                category: 'advanced',
-                icon: 'fas fa-bolt',
-                iconColor: '#FFD700',
-                requirement: { type: 'critical_hits', value: 1000 },
-                reward: { coins: 25000, multiplier: 1.3 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'critical_10000',
-                name: 'Мастер критов',
-                description: 'Нанеси 10,000 критических ударов',
-                category: 'advanced',
-                icon: 'fas fa-bolt',
-                iconColor: '#FF9800',
-                requirement: { type: 'critical_hits', value: 10000 },
-                reward: { coins: 100000, multiplier: 1.6 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'combo_100',
-                name: 'Непрерывный поток',
-                description: 'Сделай 100 кликов подряд',
-                category: 'advanced',
-                icon: 'fas fa-wave-square',
-                iconColor: '#FF5722',
-                requirement: { type: 'combo', value: 100 },
-                reward: { coins: 10000, multiplier: 1.3 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'combo_500',
-                name: 'Божественное комбо',
-                description: 'Сделай 500 кликов подряд',
-                category: 'advanced',
-                icon: 'fas fa-fire-alt',
-                iconColor: '#FF5722',
-                requirement: { type: 'combo', value: 500 },
-                reward: { coins: 50000, multiplier: 1.6 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'perfect_50',
-                name: 'Совершенство',
-                description: 'Сделай 50 идеальных ударов',
-                category: 'advanced',
-                icon: 'fas fa-star',
-                iconColor: '#4CAF50',
-                requirement: { type: 'perfect_hit', value: 50 },
-                reward: { coins: 20000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'perfect_500',
-                name: 'Абсолютная точность',
-                description: 'Сделай 500 идеальных ударов',
-                category: 'advanced',
-                icon: 'fas fa-bullseye',
-                iconColor: '#4CAF50',
-                requirement: { type: 'perfect_hit', value: 500 },
-                reward: { coins: 100000, multiplier: 1.8 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'fast_100',
-                name: 'Скоростной демон',
-                description: 'Разрушь 100 блоков менее чем за 3 секунды',
-                category: 'advanced',
-                icon: 'fas fa-running',
-                iconColor: '#F44336',
-                requirement: { type: 'fast_block_break', value: 100 },
-                reward: { coins: 15000, multiplier: 1.3 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'fast_1000',
-                name: 'Молниеносный',
-                description: 'Разрушь 1,000 блоков менее чем за 3 секунды',
-                category: 'advanced',
-                icon: 'fas fa-bolt',
-                iconColor: '#F44336',
-                requirement: { type: 'fast_block_break', value: 1000 },
-                reward: { coins: 75000, multiplier: 1.6 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            
-            // Категория: Advanced - Коллекционер
-            {
-                id: 'all_blocks_35',
-                name: 'Энциклопедист',
-                description: 'Разрушь все 35 типов блоков',
-                category: 'advanced',
-                icon: 'fas fa-book',
-                iconColor: '#673AB7',
-                requirement: { type: 'all_blocks', value: 35 },
-                reward: { coins: 50000, multiplier: 1.5 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'block_10k_each',
-                name: 'Одержимый коллекционер',
-                description: 'Разрушь по 10,000 каждого типа блоков',
-                category: 'advanced',
-                icon: 'fas fa-layer-group',
-                iconColor: '#FF4081',
-                requirement: { type: 'blocks_10k_each', value: 1 },
-                reward: { coins: 500000, multiplier: 2.0 },
-                hidden: true,
-                difficulty: 'mythic'
-            },
-            
-            // Категория: Advanced - Магазин и улучшения
-            {
-                id: 'shop_50',
-                name: 'Владелец магазина',
-                description: 'Купи 50 предметов в магазине',
-                category: 'advanced',
-                icon: 'fas fa-store',
-                iconColor: '#9C27B0',
-                requirement: { type: 'items_purchased', value: 50 },
-                reward: { coins: 25000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'shop_100',
-                name: 'Магнат покупок',
-                description: 'Купи 100 предметов в магазине',
-                category: 'advanced',
-                icon: 'fas fa-shopping-cart',
-                iconColor: '#9C27B0',
-                requirement: { type: 'items_purchased', value: 100 },
-                reward: { coins: 100000, multiplier: 1.7 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'max_all_upgrades',
-                name: 'Совершенство улучшений',
-                description: 'Максимально улучши все предметы в магазине',
-                category: 'advanced',
-                icon: 'fas fa-chart-line',
-                iconColor: '#FF9800',
-                requirement: { type: 'max_all_upgrades', value: 1 },
-                reward: { coins: 200000, multiplier: 1.8 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'coins_spent_1m',
-                name: 'Щедрый покупатель',
-                description: 'Потрать 1,000,000 монет в магазине',
-                category: 'advanced',
-                icon: 'fas fa-money-bill-wave',
-                iconColor: '#FFD700',
-                requirement: { type: 'coins_spent', value: 1000000 },
-                reward: { coins: 50000, multiplier: 1.5 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'coins_spent_10m',
-                name: 'Финансовый титан',
-                description: 'Потрать 10,000,000 монет в магазине',
-                category: 'advanced',
-                icon: 'fas fa-gem',
-                iconColor: '#FFD700',
-                requirement: { type: 'coins_spent', value: 10000000 },
-                reward: { coins: 250000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            
-            // Категория: Advanced - Автокликеры
-            {
-                id: 'auto_clicker_10',
-                name: 'Автоматическая армия',
-                description: 'Приобрети 10 автокликеров',
-                category: 'advanced',
-                icon: 'fas fa-robot',
-                iconColor: '#2196F3',
-                requirement: { type: 'auto_clicker_purchased', value: 10 },
-                reward: { coins: 20000, multiplier: 1.4 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'auto_clicker_50',
-                name: 'Роботизированная империя',
-                description: 'Приобрети 50 автокликеров',
-                category: 'advanced',
-                icon: 'fas fa-robot',
-                iconColor: '#2196F3',
-                requirement: { type: 'auto_clicker_purchased', value: 50 },
-                reward: { coins: 100000, multiplier: 1.8 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'auto_damage_100k',
-                name: 'Машина разрушения',
-                description: 'Нанеси 100,000 урона автокликерами',
-                category: 'advanced',
-                icon: 'fas fa-cogs',
-                iconColor: '#757575',
-                requirement: { type: 'auto_damage', value: 100000 },
-                reward: { coins: 30000, multiplier: 1.5 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'auto_damage_1m',
-                name: 'Автоматический апокалипсис',
-                description: 'Нанеси 1,000,000 урона автокликерами',
-                category: 'advanced',
-                icon: 'fas fa-industry',
-                iconColor: '#757575',
-                requirement: { type: 'auto_damage', value: 1000000 },
-                reward: { coins: 150000, multiplier: 1.9 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            
-            // Категория: Advanced - Удача и редкость
-            {
-                id: 'lucky_10',
-                name: 'Баловень судьбы',
-                description: 'Найди 10 Lucky Blocks',
-                category: 'advanced',
-                icon: 'fas fa-clover',
-                iconColor: '#FFEB3B',
-                requirement: { type: 'lucky_blocks', value: 10 },
-                reward: { coins: 50000, multiplier: 1.6 },
-                hidden: false,
-                difficulty: 'epic'
-            },
-            {
-                id: 'lucky_100',
-                name: 'Избранный удачи',
-                description: 'Найди 100 Lucky Blocks',
-                category: 'advanced',
-                icon: 'fas fa-dice',
-                iconColor: '#FFEB3B',
-                requirement: { type: 'lucky_blocks', value: 100 },
-                reward: { coins: 250000, multiplier: 2.0 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            {
-                id: 'consecutive_lucky',
-                name: 'Невероятная удача',
-                description: 'Найди 2 Lucky Blocks подряд',
-                category: 'advanced',
-                icon: 'fas fa-star-and-crescent',
-                iconColor: '#FFEB3B',
-                requirement: { type: 'consecutive_lucky', value: 2 },
-                reward: { coins: 100000, multiplier: 1.7 },
-                hidden: true,
-                difficulty: 'legendary'
-            },
-            
-            // Категория: Advanced - Секретные и очень сложные
-            {
-                id: 'no_regen_100',
-                name: 'Безжалостный',
-                description: 'Разрушь 100 блоков без регенерации',
-                category: 'advanced',
-                icon: 'fas fa-ban',
-                iconColor: '#757575',
-                requirement: { type: 'no_regen_blocks', value: 100 },
-                reward: { coins: 20000, multiplier: 1.4 },
-                hidden: true,
-                difficulty: 'epic'
-            },
-            {
-                id: 'one_hit_100',
-                name: 'Одним ударом',
-                description: 'Разрушь 100 блоков с одного удара',
-                category: 'advanced',
-                icon: 'fas fa-fist-raised',
-                iconColor: '#F44336',
-                requirement: { type: 'one_hit_blocks', value: 100 },
-                reward: { coins: 50000, multiplier: 1.6 },
-                hidden: true,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'max_dps_1000',
-                name: 'Машина смерти',
-                description: 'Достигни 1000 УВС',
-                category: 'advanced',
-                icon: 'fas fa-tachometer-alt',
-                iconColor: '#F44336',
-                requirement: { type: 'max_dps', value: 1000 },
-                reward: { coins: 100000, multiplier: 1.8 },
-                hidden: false,
-                difficulty: 'legendary'
-            },
-            {
-                id: 'max_dps_10000',
-                name: 'Бог разрушения',
-                description: 'Достигни 10000 УВС',
-                category: 'advanced',
-                icon: 'fas fa-sun',
-                iconColor: '#FF4081',
-                requirement: { type: 'max_dps', value: 10000 },
-                reward: { coins: 500000, multiplier: 2.5 },
-                hidden: false,
-                difficulty: 'mythic'
-            },
-            {
-                id: 'all_achievements',
-                name: 'Легенда Minecraft Clicker',
-                description: 'Получи все достижения в игре',
-                category: 'advanced',
-                icon: 'fas fa-trophy',
-                iconColor: '#FFD700',
-                requirement: { type: 'all_achievements', value: 81 },
-                reward: { coins: 1000000, multiplier: 3.0 },
-                hidden: true,
-                difficulty: 'mythic'
             }
         ];
-        
-        // ============================
-        // ДАННЫЕ БЛОКОВ
-        // ============================
         
         function createProgressiveBlocks(startHealth = 18, healthIncrease = 12, totalBlocks = 35) {
             const blocks = [];
@@ -2897,9 +2288,9 @@
                 "Уголь", "Медь", "Железо", "Олово", "Свинец",
                 "Никель", "Цинк", "Серебро", "Алюминий", "Кварц",
                 "Золото", "Платина", "Алмаз", "Изумруд", "Рубин",
-                "Сапфир", "Топаз", "Аметист", "Опал", "Редстоун",
-                "Лазурит", "Светокамень", "Призмарин", "Обсидиан", "Незерит",
-                "Мифрил", "Адамантит", "Драконий камень", "Титан", "Ураниум"
+                "Сапфир", "Топаз", "Аметист", "Опал", "Энергокамень",
+                "Синий минерал", "Светокамень", "Морской камень", "Вулканическое стекло", "Темный кристалл",
+                "Мифрил", "Адамантит", "Драконий камень", "Титан", "Уран"
             ];
             return names[index] || `Блок ${index + 1}`;
         }
@@ -2957,7 +2348,6 @@
             return index >= 30 ? "11px" : "10px";
         }
         
-        // Lucky Block
         const luckyBlockData = {
             id: 'block_lucky',
             name: 'Lucky Block',
@@ -2974,7 +2364,6 @@
             isLucky: true
         };
         
-        // Массив активных блоков
         let blocks = [];
         let currentStage = 1;
         let healthMultiplier = 1.0;
@@ -2982,12 +2371,7 @@
         let consecutiveLuckyBlocks = 0;
         let lastBlockWasLucky = false;
         
-        // ============================
-        // МАГАЗИН (УЛУЧШЕННЫЙ)
-        // ============================
-        
         const shopItems = [
-            // АВТОКЛИКЕРЫ (7 УРОВНЕЙ)
             {
                 id: 'auto_clicker_1',
                 name: 'Базовый автокликер',
@@ -3083,8 +2467,6 @@
                     };
                 }
             },
-            
-            // СИЛА УДАРА (7 УРОВНЕЙ)
             {
                 id: 'damage_booster',
                 name: 'Сила удара',
@@ -3106,8 +2488,6 @@
                     };
                 }
             },
-            
-            // УДАЧА (7 УРОВНЕЙ)
             {
                 id: 'luck_booster',
                 name: 'Удача',
@@ -3129,8 +2509,6 @@
                     };
                 }
             },
-            
-            // МНОЖИТЕЛЬ МОНЕТ (7 УРОВНЕЙ)
             {
                 id: 'coin_booster',
                 name: 'Множитель монет',
@@ -3152,8 +2530,6 @@
                     };
                 }
             },
-            
-            // Особые предметы
             {
                 id: 'critical_boost',
                 name: 'Критический удар',
@@ -3188,8 +2564,6 @@
                 effect: { type: 'antiRegen' },
                 maxLevel: 1
             },
-            
-            // Дополнительные предметы
             {
                 id: 'double_coins',
                 name: 'Удвоение монет',
@@ -3226,8 +2600,6 @@
                 maxLevel: 1,
                 consumable: true
             },
-            
-            // Премиум предметы
             {
                 id: 'auto_clicker_master',
                 name: 'Мастер автокликеров',
@@ -3252,7 +2624,7 @@
             },
             {
                 id: 'unbreakable_pickaxe',
-                name: 'Незеритовая кирка',
+                name: 'Темный кристалл кирка',
                 category: 'premium',
                 price: 150000,
                 description: 'Каждый удар наносит двойной урон блокам.',
@@ -3263,12 +2635,7 @@
             }
         ];
         
-        // ============================
-        // ИНИЦИАЛИЗАЦИЯ ИГРЫ
-        // ============================
-        
         let gameState = {
-            // Основные
             coins: 0,
             currentBlock: 0,
             currentHealth: 0,
@@ -3277,7 +2644,6 @@
             maxHealthMultiplier: 1.0,
             highestStage: 1,
             
-            // Статистика
             totalClicks: 0,
             blocksBroken: 0,
             totalCoinsEarned: 0,
@@ -3286,11 +2652,9 @@
             startTime: Date.now(),
             lastSaveTime: Date.now(),
             
-            // Достижения
             achievements: {},
             achievementsUnlocked: 0,
             
-            // Расширенная статистика для новых достижений
             luckyBlocksFound: 0,
             sessionCoins: 0,
             sessionStartTime: Date.now(),
@@ -3313,7 +2677,6 @@
             consecutiveLuckyBlocks: 0,
             maxConsecutiveLucky: 0,
             
-            // Улучшения
             damageMultiplier: 1,
             coinMultiplier: 1,
             luckMultiplier: 1,
@@ -3322,17 +2685,14 @@
             autoClickerDamageBonus: 0,
             luckyBlockChance: 0.002,
             
-            // Автокликеры
             autoClickers: [],
             autoClickerDamage: 0,
             
-            // Регенерация
             regenerationEnabled: true,
             regenerationRate: 10,
-            regenerationDelay: 30000, // 30 секунд
+            regenerationDelay: 30000,
             antiRegen: false,
             
-            // Временные бусты
             doubleCoinsActive: false,
             doubleCoinsEnd: 0,
             damageBoostActive: false,
@@ -3340,16 +2700,13 @@
             luckBoostActive: false,
             luckBoostEnd: 0,
             
-            // Настройки
             soundEnabled: true,
             notificationsEnabled: true,
             autosaveEnabled: true,
             animationsEnabled: true,
             
-            // Купленные предметы
             purchasedItems: {},
             
-            // Системные
             isBreaking: false,
             isTouching: false,
             lastHitTime: Date.now(),
@@ -3358,16 +2715,14 @@
             autoClickerIntervals: [],
             playTimer: null,
             saveInterval: null,
+            lastUpdateTime: Date.now(),
             
-            // Для титров
             creditsShown: false
         };
         
-        // Элементы DOM
         const continueBtn = document.getElementById('continue-btn');
         const newGameBtn = document.getElementById('new-game-btn');
         const statsMenuBtn = document.getElementById('stats-menu-btn');
-        const shopMenuBtn = document.getElementById('shop-menu-btn');
         const achievementsMenuBtn = document.getElementById('achievements-menu-btn');
         const settingsMenuBtn = document.getElementById('settings-menu-btn');
         const privacyBtn = document.getElementById('privacy-btn');
@@ -3388,9 +2743,40 @@
         const regenerationIndicator = document.getElementById('regeneration-indicator');
         const autoClickerInfo = document.getElementById('auto-clicker-info');
         
-        // ============================
-        // ФУНКЦИИ ДОСТИЖЕНИЙ (УЛУЧШЕННЫЕ)
-        // ============================
+        let gameActive = false;
+        let gameTimerInterval = null;
+        let lastTimerUpdate = Date.now();
+        
+        function startGameTimer() {
+            if (gameTimerInterval) return;
+            
+            gameActive = true;
+            lastTimerUpdate = Date.now();
+            
+            gameTimerInterval = setInterval(() => {
+                const now = Date.now();
+                const delta = (now - lastTimerUpdate) / 1000;
+                lastTimerUpdate = now;
+                
+                if (gameActive) {
+                    gameState.playTimeSeconds += delta;
+                    updateStatsDisplay();
+                    checkActiveBoosts();
+                    
+                    if (Math.floor(gameState.playTimeSeconds) % 5 === 0) {
+                        checkAchievements();
+                    }
+                }
+            }, 100);
+        }
+        
+        function stopGameTimer() {
+            gameActive = false;
+            if (gameTimerInterval) {
+                clearInterval(gameTimerInterval);
+                gameTimerInterval = null;
+            }
+        }
         
         function checkAchievements() {
             let achievementsCount = 0;
@@ -3400,132 +2786,60 @@
                 let maxProgress = achievement.requirement.value;
                 let progressPercent = 0;
                 
-                // Вычисляем текущий прогресс
                 switch (achievement.requirement.type) {
                     case 'blocks_broken':
                         progress = gameState.blocksBroken;
                         break;
-                        
                     case 'lucky_blocks':
                         progress = gameState.luckyBlocksFound;
                         break;
-                        
                     case 'fast_block_break':
                         progress = gameState.fastBlockBreaks;
                         break;
-                        
                     case 'total_coins':
                         progress = gameState.totalCoinsEarned;
                         break;
-                        
                     case 'total_clicks':
                         progress = gameState.totalClicks;
                         break;
-                        
                     case 'total_damage':
                         progress = gameState.totalDamage;
                         break;
-                        
                     case 'critical_hits':
                         progress = gameState.criticalHits;
                         break;
-                        
                     case 'items_purchased':
                         progress = gameState.totalItemsPurchased;
                         break;
-                        
                     case 'auto_clicker_purchased':
                         progress = gameState.autoClickersPurchased;
                         break;
-                        
                     case 'max_upgrade':
                         progress = gameState.maxUpgrades;
                         break;
-                        
                     case 'play_time':
-                        const totalPlayTime = gameState.playTimeSeconds + Math.floor((Date.now() - gameState.startTime) / 1000);
-                        progress = totalPlayTime;
+                        progress = Math.floor(gameState.playTimeSeconds);
                         break;
-                        
                     case 'stage_reached':
                         progress = gameState.highestStage;
                         break;
-                        
                     case 'combo':
                         progress = gameState.maxCombo;
                         break;
-                        
                     case 'perfect_hit':
                         progress = gameState.perfectHits;
                         break;
-                        
                     case 'all_blocks':
                         const uniqueBlocks = gameState.blocksDestroyed.filter(count => count > 0).length;
                         progress = uniqueBlocks;
                         maxProgress = Math.min(maxProgress, 35);
                         break;
-                        
-                    case 'blocks_10k_each':
-                        const all10k = gameState.blocksDestroyed.every(count => count >= 10000);
-                        progress = gameState.blocksDestroyed.filter(count => count >= 10000).length;
-                        maxProgress = 35;
-                        break;
-                        
-                    case 'coins_spent':
-                        progress = gameState.totalCoinsSpent;
-                        break;
-                        
-                    case 'max_all_upgrades':
-                        const allMaxed = shopItems.every(item => {
-                            if (item.maxLevel <= 1) return true;
-                            const purchased = gameState.purchasedItems[item.id];
-                            return purchased && purchased.level >= item.maxLevel;
-                        });
-                        progress = shopItems.filter(item => {
-                            if (item.maxLevel <= 1) return true;
-                            const purchased = gameState.purchasedItems[item.id];
-                            return purchased && purchased.level >= item.maxLevel;
-                        }).length;
-                        maxProgress = shopItems.filter(item => item.maxLevel > 1).length;
-                        break;
-                        
-                    case 'auto_damage':
-                        progress = gameState.autoDamage;
-                        break;
-                        
-                    case 'consecutive_lucky':
-                        progress = gameState.maxConsecutiveLucky;
-                        break;
-                        
-                    case 'no_regen_blocks':
-                        progress = gameState.noRegenBlocks;
-                        break;
-                        
-                    case 'one_hit_blocks':
-                        progress = gameState.oneHitBlocks;
-                        break;
-                        
-                    case 'max_dps':
-                        const currentDPS = calculateDPS();
-                        if (currentDPS > gameState.maxDPS) {
-                            gameState.maxDPS = currentDPS;
-                        }
-                        progress = gameState.maxDPS;
-                        break;
-                        
-                    case 'all_achievements':
-                        progress = gameState.achievementsUnlocked;
-                        maxProgress = 81;
-                        break;
                 }
                 
-                // Вычисляем процент прогресса
                 progressPercent = Math.min(100, (progress / maxProgress) * 100);
                 
-                // Проверяем, разблокировано ли достижение
                 const isUnlocked = progress >= maxProgress;
                 
-                // Если достижение еще не существует в состоянии игры
                 if (!gameState.achievements[achievement.id]) {
                     gameState.achievements[achievement.id] = {
                         unlocked: isUnlocked,
@@ -3540,12 +2854,10 @@
                         unlockAchievement(achievement, progress, maxProgress);
                     }
                 } else {
-                    // Обновляем прогресс
                     gameState.achievements[achievement.id].progress = progress;
                     gameState.achievements[achievement.id].maxProgress = maxProgress;
                     gameState.achievements[achievement.id].progressPercent = progressPercent;
                     
-                    // Если достижение было разблокировано только что
                     if (!gameState.achievements[achievement.id].unlocked && isUnlocked) {
                         gameState.achievements[achievement.id].unlocked = true;
                         gameState.achievements[achievement.id].unlockedAt = Date.now();
@@ -3559,7 +2871,6 @@
                 }
             });
             
-            // Обновляем счетчик достижений
             updateAchievementsCounter(achievementsCount);
         }
         
@@ -3568,16 +2879,16 @@
             const totalAchievementsElement = document.getElementById('total-achievements');
             
             if (achievementsCountElement) {
-                achievementsCountElement.textContent = `${count}/81`;
+                achievementsCountElement.textContent = `${count}/${achievementsData.length}`;
             }
             
             if (totalAchievementsElement) {
-                totalAchievementsElement.textContent = `(${count}/81)`;
+                totalAchievementsElement.textContent = `(${count}/${achievementsData.length})`;
             }
         }
         
         function unlockAchievement(achievement, progress, maxProgress) {
-            console.log(`Разблокировано достижение: ${achievement.name} (${achievement.difficulty || 'обычное'})`);
+            console.log(`Разблокировано достижение: ${achievement.name}`);
             
             if (achievement.reward.coins) {
                 gameState.coins += achievement.reward.coins;
@@ -3591,11 +2902,7 @@
             }
             
             if (gameState.notificationsEnabled) {
-                if (achievement.difficulty === 'epic' || achievement.difficulty === 'legendary' || achievement.difficulty === 'mythic') {
-                    showEpicAchievementNotification(achievement);
-                } else {
-                    showAchievementNotification(achievement);
-                }
+                showAchievementNotification(achievement);
             }
             
             updateUI();
@@ -3613,32 +2920,6 @@
             }, 3000);
         }
         
-        function showEpicAchievementNotification(achievement) {
-            let color = '#FF9800';
-            let icon = 'fas fa-crown';
-            
-            if (achievement.difficulty === 'epic') {
-                color = '#9C27B0';
-                icon = 'fas fa-gem';
-            } else if (achievement.difficulty === 'legendary') {
-                color = '#FF9800';
-                icon = 'fas fa-crown';
-            } else if (achievement.difficulty === 'mythic') {
-                color = '#FF4081';
-                icon = 'fas fa-fire';
-            }
-            
-            epicAchievementNotification.innerHTML = `
-                <i class="${icon}"></i> ${achievement.difficulty === 'epic' ? 'Эпическое' : achievement.difficulty === 'legendary' ? 'Легендарное' : 'Мифическое'} достижение: ${achievement.name}
-            `;
-            epicAchievementNotification.style.background = `linear-gradient(45deg, ${color}, ${color === '#9C27B0' ? '#7B1FA2' : color === '#FF9800' ? '#F57C00' : '#C2185B'})`;
-            epicAchievementNotification.style.display = 'block';
-            
-            setTimeout(() => {
-                epicAchievementNotification.style.display = 'none';
-            }, 4000);
-        }
-        
         function loadAchievements() {
             const achievementsContainer = document.getElementById('achievements-container');
             achievementsContainer.innerHTML = '';
@@ -3646,7 +2927,6 @@
             const activeCategory = document.querySelector('.achievement-categories .category-btn.active').dataset.category;
             const filteredAchievements = achievementsData.filter(achievement => {
                 if (activeCategory === 'all') return true;
-                if (activeCategory === 'advanced') return achievement.category === 'advanced';
                 return achievement.category === activeCategory;
             });
             
@@ -3658,20 +2938,10 @@
                     progressPercent: 0
                 };
                 
-                let difficultyClass = '';
-                if (achievement.difficulty === 'epic') {
-                    difficultyClass = 'achievement-epic';
-                } else if (achievement.difficulty === 'legendary') {
-                    difficultyClass = 'achievement-legendary';
-                } else if (achievement.difficulty === 'mythic') {
-                    difficultyClass = 'achievement-mythic';
-                }
-                
                 const achievementElement = document.createElement('div');
-                achievementElement.className = `achievement-item ${achievementState.unlocked ? 'unlocked' : ''} ${difficultyClass} ${achievement.hidden && !achievementState.unlocked ? 'achievement-hidden' : ''}`;
+                achievementElement.className = `achievement-item ${achievementState.unlocked ? 'unlocked' : ''} ${achievement.hidden && !achievementState.unlocked ? 'achievement-hidden' : ''}`;
                 achievementElement.style.animationDelay = `${index * 0.05}s`;
                 
-                // Обновляем прогресс перед отображением
                 checkAchievementProgress(achievement, achievementState);
                 
                 let progressBarHTML = '';
@@ -3703,32 +2973,13 @@
                     rewardHTML = `<div class="achievement-reward"><i class="fas fa-gift"></i> Награда: ${rewardText}</div>`;
                 }
                 
-                let difficultyBadge = '';
-                if (achievement.difficulty) {
-                    let badgeColor = '#4CAF50';
-                    let badgeText = 'Обычное';
-                    
-                    if (achievement.difficulty === 'epic') {
-                        badgeColor = '#9C27B0';
-                        badgeText = 'Эпическое';
-                    } else if (achievement.difficulty === 'legendary') {
-                        badgeColor = '#FF9800';
-                        badgeText = 'Легендарное';
-                    } else if (achievement.difficulty === 'mythic') {
-                        badgeColor = '#FF4081';
-                        badgeText = 'Мифическое';
-                    }
-                    
-                    difficultyBadge = `<span style="background-color: ${badgeColor}; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; margin-left: 5px;">${badgeText}</span>`;
-                }
-                
                 achievementElement.innerHTML = `
                     <div class="achievement-header">
                         <div class="achievement-title">
                             <div class="achievement-icon" style="background-color: ${achievement.iconColor};">
                                 <i class="${achievement.icon}"></i>
                             </div>
-                            ${achievement.name} ${difficultyBadge}
+                            ${achievement.name}
                         </div>
                         ${achievementState.unlocked ? 
                             '<div class="achievement-unlocked-badge"><i class="fas fa-check"></i> Разблокировано</div>' : 
@@ -3744,7 +2995,6 @@
         }
         
         function checkAchievementProgress(achievement, achievementState) {
-            // Пересчитываем прогресс для отображения
             let progress = 0;
             let maxProgress = achievement.requirement.value;
             
@@ -3774,8 +3024,7 @@
                     progress = gameState.autoClickersPurchased;
                     break;
                 case 'play_time':
-                    const totalPlayTime = gameState.playTimeSeconds + Math.floor((Date.now() - gameState.startTime) / 1000);
-                    progress = totalPlayTime;
+                    progress = Math.floor(gameState.playTimeSeconds);
                     break;
                 case 'stage_reached':
                     progress = gameState.highestStage;
@@ -3798,10 +3047,6 @@
             achievementState.maxProgress = maxProgress;
             achievementState.progressPercent = Math.min(100, (progress / maxProgress) * 100);
         }
-        
-        // ============================
-        // ФУНКЦИИ СОХРАНЕНИЯ
-        // ============================
         
         function saveGame() {
             if (!gameState.autosaveEnabled) return;
@@ -3883,7 +3128,7 @@
             };
             
             try {
-                localStorage.setItem('minecraftClickerSave', JSON.stringify(saveData));
+                localStorage.setItem('blockMinerSave', JSON.stringify(saveData));
                 gameState.lastSaveTime = Date.now();
                 
                 if (gameState.notificationsEnabled) {
@@ -3896,7 +3141,7 @@
         
         function loadGame() {
             try {
-                const saveData = localStorage.getItem('minecraftClickerSave');
+                const saveData = localStorage.getItem('blockMinerSave');
                 
                 if (!saveData) {
                     return false;
@@ -3904,26 +3149,21 @@
                 
                 const parsedData = JSON.parse(saveData);
                 
-                // Миграция старых сохранений
                 if (!parsedData.version || parsedData.version !== SAVE_VERSION) {
-                    // Можно добавить миграцию данных здесь
                     return false;
                 }
                 
                 const loadedState = parsedData.gameState;
                 
-                // Загружаем все основные поля
                 Object.keys(loadedState).forEach(key => {
                     if (gameState[key] !== undefined) {
                         gameState[key] = loadedState[key];
                     }
                 });
                 
-                // Загружаем отдельные поля, которые могут отсутствовать в старых сохранениях
                 currentStage = loadedState.currentStage || 1;
                 healthMultiplier = loadedState.maxHealthMultiplier || 1.0;
                 
-                // Инициализируем блоки с правильной стадией
                 initializeBlocks(currentStage);
                 
                 return true;
@@ -3935,7 +3175,7 @@
         
         function clearSave() {
             try {
-                localStorage.removeItem('minecraftClickerSave');
+                localStorage.removeItem('blockMinerSave');
                 return true;
             } catch (e) {
                 console.error('Ошибка при очистке сохранения:', e);
@@ -3950,10 +3190,6 @@
                 saveNotification.style.display = 'none';
             }, 2000);
         }
-        
-        // ============================
-        // ИНИЦИАЛИЗАЦИЯ ИГРЫ
-        // ============================
         
         function initGame() {
             const loaded = loadGame();
@@ -3974,7 +3210,12 @@
             loadStats();
             loadAchievements();
             setupControls();
-            startTimers();
+            
+            if (gameState.autosaveEnabled) {
+                gameState.saveInterval = setInterval(() => {
+                    saveGame();
+                }, 30000);
+            }
             
             checkAchievements();
             
@@ -4005,7 +3246,6 @@
                 initializeBlocks(currentStage);
             }
             
-            // Проверяем шанс Lucky Block с учетом улучшений
             let luckyChance = gameState.luckyBlockChance;
             if (gameState.purchasedItems['lucky_charm']) {
                 luckyChance *= 2;
@@ -4089,10 +3329,6 @@
             
             updateCracks();
         }
-        
-        // ============================
-        // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
-        // ============================
         
         function updateUI() {
             coinsCounter.textContent = formatNumber(gameState.coins);
@@ -4212,7 +3448,7 @@
             document.getElementById('total-clicks').textContent = formatNumber(gameState.totalClicks);
             document.getElementById('blocks-broken').textContent = formatNumber(gameState.blocksBroken);
             
-            const totalSeconds = gameState.playTimeSeconds + Math.floor((Date.now() - gameState.startTime) / 1000);
+            const totalSeconds = Math.floor(gameState.playTimeSeconds);
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
@@ -4257,10 +3493,6 @@
             return averageDamage + autoClickerDamage;
         }
         
-        // ============================
-        // ИГРОВОЙ ПРОЦЕСС
-        // ============================
-        
         function handleBlockClick(event) {
             if (gameState.isBreaking) return;
             
@@ -4269,7 +3501,6 @@
             gameState.lastHitTime = now;
             gameState.totalClicks++;
             
-            // Обработка комбо
             if (gameState.lastClickTime > 0 && now - gameState.lastClickTime < 2000) {
                 gameState.currentCombo++;
                 if (gameState.currentCombo > gameState.maxCombo) {
@@ -4280,7 +3511,6 @@
             }
             gameState.lastClickTime = now;
             
-            // Сброс таймера регенерации
             if (gameState.regenerationTimer) {
                 clearTimeout(gameState.regenerationTimer);
                 gameState.regenerationTimer = null;
@@ -4291,11 +3521,9 @@
                 block.classList.remove('regenerating');
             }
             
-            // Расчет урона
             let damage = 0.95 * gameState.damageMultiplier;
             let isCritical = false;
             
-            // Умножение урона от бустов
             if (gameState.damageBoostActive) {
                 damage *= 3;
             }
@@ -4304,19 +3532,16 @@
                 damage *= 2;
             }
             
-            // Проверка критического удара
             if (Math.random() * 100 < gameState.criticalChance) {
                 damage *= gameState.criticalMultiplier;
                 isCritical = true;
                 gameState.criticalHits++;
             }
             
-            // Применение урона
             const previousHealth = gameState.currentHealth;
             gameState.currentHealth -= damage;
             gameState.totalDamage += damage;
             
-            // Статистика для достижений
             if (gameState.antiRegen) {
                 gameState.noRegenBlocks++;
             }
@@ -4326,7 +3551,6 @@
                 gameState.oneHitBlocks++;
             }
             
-            // Анимации
             if (gameState.animationsEnabled) {
                 block.classList.add('hit');
                 setTimeout(() => {
@@ -4340,7 +3564,6 @@
                 }
             }
             
-            // Получение монет
             const coinsEarned = getCoinsFromHit();
             if (coinsEarned > 0) {
                 gameState.coins += coinsEarned;
@@ -4352,19 +3575,16 @@
                 }
             }
             
-            // Проверка разрушения блока
             if (gameState.currentHealth <= 0) {
                 destroyBlock(blockStartTime);
             } else {
                 updateUI();
                 
-                // Запуск регенерации
                 if (gameState.regenerationEnabled && !gameState.antiRegen) {
                     startRegenerationTimer();
                 }
             }
             
-            // Проверка достижений
             checkAchievements();
             saveGame();
         }
@@ -4383,12 +3603,10 @@
             const maxCoins = blockData.baseCoins.max;
             let coins = Math.floor(Math.random() * (maxCoins - minCoins + 1)) + minCoins;
             
-            // Применение множителей
             coins *= gameState.coinMultiplier;
             coins *= gameState.luckMultiplier;
             coins *= (1 + ((currentStage - 1) * 0.1));
             
-            // Временные бусты
             if (gameState.doubleCoinsActive) {
                 coins *= 2;
             }
@@ -4397,7 +3615,6 @@
                 coins *= 2;
             }
             
-            // Случайный бонус
             if (Math.random() * 100 < gameState.criticalChance / 2) {
                 coins *= 2;
             }
@@ -4460,7 +3677,6 @@
                 bonusCoins = 5000;
                 isLuckyBlockActive = false;
                 
-                // Обработка последовательных Lucky Blocks
                 if (lastBlockWasLucky) {
                     gameState.consecutiveLuckyBlocks++;
                     if (gameState.consecutiveLuckyBlocks > gameState.maxConsecutiveLucky) {
@@ -4474,12 +3690,10 @@
                 blockData = blocks[gameState.currentBlock];
                 bonusCoins = Math.floor(blockData.baseCoins.max * 3 * gameState.coinMultiplier * (1 + ((currentStage - 1) * 0.1)));
                 
-                // Запись статистики по типам блоков
                 if (gameState.currentBlock < gameState.blocksDestroyed.length) {
                     gameState.blocksDestroyed[gameState.currentBlock] = (gameState.blocksDestroyed[gameState.currentBlock] || 0) + 1;
                 }
                 
-                // Проверка быстрого разрушения
                 const breakTime = (Date.now() - blockStartTime) / 1000;
                 if (breakTime < 3) {
                     gameState.fastBlockBreaks++;
@@ -4489,7 +3703,6 @@
                 gameState.consecutiveLuckyBlocks = 0;
             }
             
-            // Применение бустов к бонусным монетам
             let finalCoins = bonusCoins;
             if (gameState.doubleCoinsActive) {
                 finalCoins *= 2;
@@ -4502,7 +3715,6 @@
             gameState.totalCoinsEarned += finalCoins;
             gameState.sessionCoins += finalCoins;
             
-            // Анимация разрушения
             if (gameState.animationsEnabled) {
                 block.style.animation = 'breakBlock 0.5s forwards';
             }
@@ -4582,16 +3794,12 @@
             }, 3500);
         }
         
-        // ============================
-        // РЕГЕНЕРАЦИЯ (ИСПРАВЛЕННОЕ ВРЕМЯ)
-        // ============================
-        
         function startRegenerationTimer() {
             if (gameState.antiRegen || !gameState.regenerationEnabled) return;
             
             gameState.regenerationTimer = setTimeout(() => {
                 startRegeneration();
-            }, gameState.regenerationDelay); // 30 секунд
+            }, gameState.regenerationDelay);
         }
         
         function startRegeneration() {
@@ -4614,7 +3822,7 @@
                 if (gameState.currentHealth >= gameState.maxHealth) {
                     stopRegeneration();
                 }
-            }, 1000); // Каждую секунду
+            }, 1000);
         }
         
         function stopRegeneration() {
@@ -4630,10 +3838,6 @@
                 startRegenerationTimer();
             }
         }
-        
-        // ============================
-        // АВТОКЛИКЕРЫ (7 УРОВНЕЙ)
-        // ============================
         
         function addAutoClicker(clickerData, level = 1) {
             const existingClicker = gameState.autoClickers.find(c => c.id === clickerData.id);
@@ -4652,11 +3856,9 @@
         }
         
         function restartAutoClickers() {
-            // Останавливаем все текущие автокликеры
             gameState.autoClickerIntervals.forEach(intervalId => clearInterval(intervalId));
             gameState.autoClickerIntervals = [];
             
-            // Запускаем все автокликеры заново
             gameState.autoClickers.forEach(clicker => {
                 const item = shopItems.find(i => i.id === clicker.id);
                 if (item) {
@@ -4674,7 +3876,6 @@
             let damage = stats.damage + gameState.autoClickerDamage;
             let interval = stats.interval;
             
-            // Бонус от улучшения "Мастер автокликеров"
             if (gameState.purchasedItems['auto_clicker_master']) {
                 damage *= 1.5;
             }
@@ -4710,10 +3911,6 @@
             
             gameState.autoClickerIntervals.push(intervalId);
         }
-        
-        // ============================
-        // МАГАЗИН (УЛУЧШЕННЫЙ)
-        // ============================
         
         function loadShopItems() {
             const shopItemsContainer = document.getElementById('shop-items-container');
@@ -4804,7 +4001,6 @@
                 shopItemsContainer.appendChild(shopItem);
             });
             
-            // Обработка категорий
             document.querySelectorAll('.shop-categories .category-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const category = this.dataset.category;
@@ -4827,7 +4023,7 @@
             const statsContainer = document.getElementById('stats-container');
             statsContainer.innerHTML = '';
             
-            const totalPlayTime = gameState.playTimeSeconds + Math.floor((Date.now() - gameState.startTime) / 1000);
+            const totalPlayTime = Math.floor(gameState.playTimeSeconds);
             const hours = Math.floor(totalPlayTime / 3600);
             const minutes = Math.floor((totalPlayTime % 3600) / 60);
             
@@ -4844,14 +4040,7 @@
                 { label: 'Текущая стадия', value: currentStage, icon: 'fas fa-layer-group' },
                 { label: 'Макс. стадия', value: gameState.highestStage, icon: 'fas fa-trophy' },
                 { label: 'Текущие монеты', value: gameState.coins, icon: 'fas fa-coins' },
-                { label: 'Достижения', value: `${gameState.achievementsUnlocked}/81`, icon: 'fas fa-trophy' },
-                { label: 'Макс. комбо', value: gameState.maxCombo, icon: 'fas fa-fire' },
-                { label: 'Критических ударов', value: gameState.criticalHits, icon: 'fas fa-bolt' },
-                { label: 'Идеальных ударов', value: gameState.perfectHits, icon: 'fas fa-star' },
-                { label: 'Быстрых разрушений', value: gameState.fastBlockBreaks, icon: 'fas fa-running' },
-                { label: 'Макс. УВС', value: gameState.maxDPS.toFixed(1), icon: 'fas fa-chart-line' },
-                { label: 'Урон от автокликеров', value: Math.floor(gameState.autoDamage), icon: 'fas fa-cogs' },
-                { label: 'Потрачено монет', value: gameState.totalCoinsSpent, icon: 'fas fa-money-bill-wave' }
+                { label: 'Достижения', value: `${gameState.achievementsUnlocked}/${achievementsData.length}`, icon: 'fas fa-trophy' }
             ];
             
             stats.forEach((stat, index) => {
@@ -4943,7 +4132,6 @@
         function applyItemEffect(item, level) {
             switch (item.effect.type) {
                 case 'autoClicker':
-                    // Обрабатывается в addAutoClicker
                     break;
                     
                 case 'damageMultiplier':
@@ -4993,7 +4181,7 @@
                     break;
                     
                 case 'autoClickerMaster':
-                    gameState.autoClickerDamageBonus = 0.5; // 50% бонус
+                    gameState.autoClickerDamageBonus = 0.5;
                     restartAutoClickers();
                     break;
                     
@@ -5002,14 +4190,9 @@
                     break;
                     
                 case 'unbreakablePickaxe':
-                    // Эффект применяется при расчете урона
                     break;
             }
         }
-        
-        // ============================
-        // УТИЛИТЫ И ФОРМАТИРОВАНИЕ
-        // ============================
         
         function formatNumber(num) {
             if (num >= 1000000000) {
@@ -5022,30 +4205,13 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
         
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            
-            if (hours > 0) {
-                return `${hours}ч ${minutes}м`;
-            } else if (minutes > 0) {
-                return `${minutes}м ${secs}с`;
-            } else {
-                return `${secs}с`;
-            }
-        }
-        
-        // ============================
-        // УПРАВЛЕНИЕ И НАСТРОЙКИ
-        // ============================
-        
         function setupControls() {
             continueBtn.addEventListener('click', () => {
                 menuScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
                 initCurrentBlock();
                 updateUI();
+                startGameTimer();
             });
             
             newGameBtn.addEventListener('click', () => {
@@ -5053,7 +4219,6 @@
             });
             
             document.getElementById('confirm-new-game-btn').addEventListener('click', () => {
-                // Создаем новое состояние игры
                 gameState = {
                     coins: 0,
                     currentBlock: 0,
@@ -5134,6 +4299,7 @@
                     autoClickerIntervals: [],
                     playTimer: null,
                     saveInterval: null,
+                    lastUpdateTime: Date.now(),
                     
                     creditsShown: false
                 };
@@ -5149,6 +4315,7 @@
                 initCurrentBlock();
                 updateUI();
                 loadAchievements();
+                startGameTimer();
             });
             
             document.getElementById('cancel-new-game-btn').addEventListener('click', () => {
@@ -5159,56 +4326,70 @@
                 menuScreen.style.display = 'none';
                 statsScreen.style.display = 'flex';
                 loadStats();
-            });
-            
-            shopMenuBtn.addEventListener('click', () => {
-                menuScreen.style.display = 'none';
-                shopScreen.style.display = 'flex';
-                loadShopItems();
+                stopGameTimer();
             });
             
             achievementsMenuBtn.addEventListener('click', () => {
                 menuScreen.style.display = 'none';
                 achievementsScreen.style.display = 'flex';
                 loadAchievements();
+                stopGameTimer();
+            });
+            
+            settingsMenuBtn.addEventListener('click', () => {
+                menuScreen.style.display = 'none';
+                settingsScreen.style.display = 'flex';
+                stopGameTimer();
+                
+                document.getElementById('sound-toggle').checked = gameState.soundEnabled;
+                document.getElementById('notifications-toggle').checked = gameState.notificationsEnabled;
+                document.getElementById('autosave-toggle').checked = gameState.autosaveEnabled;
+                document.getElementById('animations-toggle').checked = gameState.animationsEnabled;
             });
             
             gameShopBtn.addEventListener('click', () => {
                 gameScreen.style.display = 'none';
                 shopScreen.style.display = 'flex';
                 loadShopItems();
+                stopGameTimer();
             });
             
             gameStatsBtn.addEventListener('click', () => {
                 gameScreen.style.display = 'none';
                 statsScreen.style.display = 'flex';
                 loadStats();
+                stopGameTimer();
             });
             
             gameMenuBtn.addEventListener('click', () => {
                 gameScreen.style.display = 'none';
                 menuScreen.style.display = 'flex';
                 saveGame();
+                stopGameTimer();
             });
             
             document.getElementById('shop-back-btn').addEventListener('click', () => {
                 shopScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                startGameTimer();
             });
             
             document.getElementById('stats-back-btn').addEventListener('click', () => {
                 statsScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                startGameTimer();
             });
             
             document.getElementById('achievements-back-btn').addEventListener('click', () => {
                 achievementsScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                startGameTimer();
             });
             
             document.getElementById('settings-back-btn').addEventListener('click', () => {
                 settingsScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                startGameTimer();
             });
             
             creditsBackBtn.addEventListener('click', () => {
@@ -5216,6 +4397,7 @@
                 menuScreen.style.display = 'flex';
                 const creditsContent = document.getElementById('credits-content');
                 creditsContent.style.animation = '';
+                stopGameTimer();
             });
             
             privacyBtn.addEventListener('click', () => {
@@ -5225,12 +4407,6 @@
             document.getElementById('close-modal-btn').addEventListener('click', () => {
                 document.getElementById('privacy-modal').style.display = 'none';
             });
-            
-            // Настройки
-            document.getElementById('sound-toggle').checked = gameState.soundEnabled;
-            document.getElementById('notifications-toggle').checked = gameState.notificationsEnabled;
-            document.getElementById('autosave-toggle').checked = gameState.autosaveEnabled;
-            document.getElementById('animations-toggle').checked = gameState.animationsEnabled;
             
             document.getElementById('sound-toggle').addEventListener('change', () => {
                 gameState.soundEnabled = document.getElementById('sound-toggle').checked;
@@ -5244,6 +4420,20 @@
             
             document.getElementById('autosave-toggle').addEventListener('change', () => {
                 gameState.autosaveEnabled = document.getElementById('autosave-toggle').checked;
+                
+                if (gameState.autosaveEnabled) {
+                    if (!gameState.saveInterval) {
+                        gameState.saveInterval = setInterval(() => {
+                            saveGame();
+                        }, 30000);
+                    }
+                } else {
+                    if (gameState.saveInterval) {
+                        clearInterval(gameState.saveInterval);
+                        gameState.saveInterval = null;
+                    }
+                }
+                
                 saveGame();
             });
             
@@ -5281,7 +4471,6 @@
                 }
             });
             
-            // Управление блоком
             block.addEventListener('mousedown', (event) => {
                 if (!gameState.isTouching) {
                     gameState.isTouching = true;
@@ -5319,20 +4508,14 @@
                 gameState.isTouching = false;
             });
             
-            // Покупка предметов
             document.getElementById('shop-items-container').addEventListener('click', (e) => {
                 const buyBtn = e.target.closest('.buy-btn');
                 if (buyBtn && !buyBtn.disabled) {
                     const itemId = buyBtn.dataset.id;
                     const success = purchaseItem(itemId);
-                    
-                    if (success) {
-                        // Покупка успешна
-                    }
                 }
             });
             
-            // Категории достижений
             document.querySelectorAll('.achievement-categories .category-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const category = this.dataset.category;
@@ -5346,46 +4529,6 @@
             
             block.addEventListener('contextmenu', (e) => e.preventDefault());
         }
-        
-        // ============================
-        // ТАЙМЕРЫ
-        // ============================
-        
-        function startTimers() {
-            // Таймер игрового времени
-            gameState.playTimer = setInterval(() => {
-                gameState.playTimeSeconds++;
-                updateStatsDisplay();
-                checkActiveBoosts();
-                
-                // Проверка достижений каждые 5 секунд
-                if (gameState.playTimeSeconds % 5 === 0) {
-                    checkAchievements();
-                }
-            }, 1000);
-            
-            // Автосохранение
-            gameState.saveInterval = setInterval(() => {
-                saveGame();
-            }, 30000);
-            
-            // Запуск автокликеров
-            gameState.autoClickers.forEach(clicker => {
-                const item = shopItems.find(i => i.id === clicker.id);
-                if (item) {
-                    startAutoClicker(item, clicker.level || 1);
-                }
-            });
-            
-            // Запуск таймера регенерации
-            if (gameState.regenerationEnabled && !gameState.antiRegen) {
-                startRegenerationTimer();
-            }
-        }
-        
-        // ============================
-        // ЗАПУСК ИГРЫ
-        // ============================
         
         window.addEventListener('DOMContentLoaded', initGame);
         
