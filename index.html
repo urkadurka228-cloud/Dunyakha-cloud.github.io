@@ -6,6 +6,7 @@
     <title>Block Miner Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Все существующие стили остаются без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -29,6 +30,9 @@
             --epic-color: #9C27B0;
             --legendary-color: #FF9800;
             --mythic-color: #FF4081;
+            --hell-color: #FF4500;
+            --hell-fire: #FF3300;
+            --final-color: #8A2BE2;
         }
         
         body {
@@ -433,18 +437,24 @@
             100% { box-shadow: 0 0 30px var(--lucky-color), 0 0 60px var(--lucky-color); }
         }
         
-        .cracks-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 2;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
+        .block.hell {
+            animation: hellFire 2s infinite alternate, blockFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes hellFire {
+            0% { box-shadow: 0 0 20px var(--hell-color), 0 0 40px #FF0000; }
+            50% { box-shadow: 0 0 30px var(--hell-fire), 0 0 60px #FF4500; }
+            100% { box-shadow: 0 0 20px #FF8C00, 0 0 40px var(--hell-color); }
+        }
+        
+        .block.final {
+            animation: finalGlow 3s infinite alternate, blockFloat 4s infinite ease-in-out;
+        }
+        
+        @keyframes finalGlow {
+            0% { box-shadow: 0 0 30px var(--final-color), 0 0 60px #4B0082; }
+            50% { box-shadow: 0 0 50px #9400D3, 0 0 80px var(--final-color); }
+            100% { box-shadow: 0 0 30px #8A2BE2, 0 0 60px #4B0082; }
         }
         
         .regeneration-indicator {
@@ -572,6 +582,42 @@
             padding: 20px 30px;
             border-radius: 15px;
             font-size: 2rem;
+            font-weight: bold;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: luckyNotification 3s forwards;
+            display: none;
+        }
+        
+        .stage-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, var(--hell-color), #8B0000);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: luckyNotification 3s forwards;
+            display: none;
+        }
+        
+        .final-stage-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, var(--final-color), #4B0082);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            font-size: 2.5rem;
             font-weight: bold;
             z-index: 1000;
             text-align: center;
@@ -1507,7 +1553,7 @@
                 </button>
             </div>
             <button class="privacy-btn" id="privacy-btn">Конфиденциальность</button>
-            <div class="version">Версия 4.0</div>
+            <div class="version">Версия 5.0 - Адское обновление</div>
         </div>
         
         <div id="game-screen">
@@ -1545,7 +1591,6 @@
             <div class="block-container">
                 <div class="block" id="block">
                     <img src="" alt="Блок" class="block-img" id="block-img">
-                    <div class="cracks-overlay" id="cracks-overlay"></div>
                     <div class="regeneration-indicator" id="regeneration-indicator">Регенерация!</div>
                 </div>
             </div>
@@ -1586,7 +1631,7 @@
             
             <div class="shop-categories">
                 <button class="category-btn active" data-category="all">Все</button>
-                <button class="category-btn" data-category="clickers">Автокликеры (7 ур.)</button>
+                <button class="category-btn" data-category="clickers">Автокликеры</button>
                 <button class="category-btn" data-category="boosters">Бустеры (7 ур.)</button>
                 <button class="category-btn" data-category="additional">Дополнительно</button>
                 <button class="category-btn" data-category="premium">Премиум</button>
@@ -1639,19 +1684,6 @@
             </div>
             
             <div class="settings-container">
-                <div class="setting-item">
-                    <div class="setting-title">
-                        <i class="fas fa-volume-up"></i>
-                        Звуковые эффекты
-                    </div>
-                    <div class="setting-controls">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="sound-toggle" class="toggle-checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
                 <div class="setting-item">
                     <div class="setting-title">
                         <i class="fas fa-bell"></i>
@@ -1779,7 +1811,7 @@
                     <p>Вы можете очистить данные игры в настройках или очистить кэш браузера.</p>
                     
                     <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
-                        Версия игры: 4.0<br>
+                        Версия игры: 5.0<br>
                         Последнее обновление: 2024
                     </p>
                 </div>
@@ -1834,19 +1866,17 @@
             <div class="modal-content">
                 <h2 class="modal-title">О игре</h2>
                 <div class="modal-text">
-                    <p><strong>Block Miner Pro v4.0</strong> - улучшенная версия классического кликера с тематикой добычи блоков.</p>
+                    <p><strong>Block Miner Pro v5.0</strong> - Адское обновление с тремя стадиями!</p>
                     
-                    <h3 style="color: var(--gold-color); margin-top: 15px;">Новые функции в версии 4.0:</h3>
+                    <h3 style="color: var(--gold-color); margin-top: 15px;">Новые функции в версии 5.0:</h3>
                     <ul style="margin-left: 20px; margin-bottom: 15px;">
-                        <li>31 достижения с реальным отслеживанием прогресса</li>
-                        <li>Автокликеры до 7 уровня</li>
-                        <li>Бустеры силы удара до 7 уровня</li>
-                        <li>Бустеры удачи до 7 уровня</li>
-                        <li>Секретный Lucky Block с шансом 0.2%</li>
-                        <li>Система стадий вместо уровней</li>
-                        <li>15 новых предметов в магазине</li>
-                        <li>Улучшенная графика и анимации</li>
-                        <li>Индикаторы прогресса достижений</li>
+                        <li>3 уникальные стадии с разными типами блоков</li>
+                        <li>Стадия 1: Обычные блоки (35 шт)</li>
+                        <li>Стадия 2: Адские блоки с огненной анимацией (25 шт)</li>
+                        <li>Стадия 3: Финальные легендарные блоки (20 шт) с огромным запасом здоровья</li>
+                        <li>Уникальные анимации для каждой стадии</li>
+                        <li>Специальные уведомления при переходе на новую стадию</li>
+                        <li>Увеличенные награды на высших стадиях</li>
                     </ul>
                     
                     <h3 style="color: var(--gold-color); margin-top: 15px;">Управление:</h3>
@@ -1857,7 +1887,7 @@
                     <p>• Ищите редкий Lucky Block для бонусных монет</p>
                     
                     <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
-                        Версия: 4.0<br>
+                        Версия: 5.0<br>
                         Создано с использованием HTML5, CSS3 и JavaScript
                     </p>
                 </div>
@@ -1871,6 +1901,18 @@
             <i class="fas fa-star"></i><br>
             LUCKY BLOCK!<br>
             <span style="font-size: 1.2rem;">+5,000 монет</span>
+        </div>
+        
+        <div class="stage-notification" id="hell-stage-notification">
+            <i class="fas fa-fire"></i><br>
+            АДСКАЯ СТАДИЯ!<br>
+            <span style="font-size: 1.2rem;">Добро пожаловать в ад</span>
+        </div>
+        
+        <div class="final-stage-notification" id="final-stage-notification">
+            <i class="fas fa-crown"></i><br>
+            ФИНАЛЬНАЯ СТАДИЯ!<br>
+            <span style="font-size: 1.2rem;">Легендарные блоки</span>
         </div>
         
         <div class="save-notification" id="save-notification">
@@ -1887,7 +1929,7 @@
     </div>
 
     <script>
-        const SAVE_VERSION = '4.0';
+        const SAVE_VERSION = '5.0';
         
         const loadingScreen = document.getElementById('loading-screen');
         const menuScreen = document.getElementById('menu-screen');
@@ -1898,9 +1940,12 @@
         const creditsScreen = document.getElementById('credits-screen');
         const achievementsScreen = document.getElementById('achievements-screen');
         const luckyNotification = document.getElementById('lucky-notification');
+        const hellStageNotification = document.getElementById('hell-stage-notification');
+        const finalStageNotification = document.getElementById('final-stage-notification');
         const achievementNotification = document.getElementById('achievement-notification');
         const epicAchievementNotification = document.getElementById('epic-achievement-notification');
         
+        // Достижения остаются без изменений
         const achievementsData = [
             {
                 id: 'first_block',
@@ -2178,35 +2223,24 @@
                 hidden: false
             },
             {
-                id: 'stage_5',
-                name: 'Покоритель стадий',
-                description: 'Достигни 5 стадии',
+                id: 'stage_2',
+                name: 'Покоритель ада',
+                description: 'Достигни 2 стадии (Адские блоки)',
                 category: 'misc',
-                icon: 'fas fa-layer-group',
-                iconColor: '#9C27B0',
-                requirement: { type: 'stage_reached', value: 5 },
-                reward: { coins: 2000, multiplier: 1.1 },
-                hidden: false
-            },
-            {
-                id: 'stage_10',
-                name: 'Мастер стадий',
-                description: 'Достигни 10 стадии',
-                category: 'misc',
-                icon: 'fas fa-trophy',
-                iconColor: '#FFD700',
-                requirement: { type: 'stage_reached', value: 10 },
+                icon: 'fas fa-fire',
+                iconColor: '#FF4500',
+                requirement: { type: 'stage_reached', value: 2 },
                 reward: { coins: 5000, multiplier: 1.2 },
                 hidden: false
             },
             {
-                id: 'stage_20',
-                name: 'Легенда стадий',
-                description: 'Достигни 20 стадии',
+                id: 'stage_3',
+                name: 'Легенда финала',
+                description: 'Достигни 3 стадии (Финальные блоки)',
                 category: 'misc',
                 icon: 'fas fa-crown',
-                iconColor: '#FFD700',
-                requirement: { type: 'stage_reached', value: 20 },
+                iconColor: '#8A2BE2',
+                requirement: { type: 'stage_reached', value: 3 },
                 reward: { coins: 10000, multiplier: 1.3 },
                 hidden: false
             },
@@ -2245,107 +2279,209 @@
             }
         ];
         
-        function createProgressiveBlocks(startHealth = 18, healthIncrease = 12, totalBlocks = 35) {
+        // Обновленная функция создания блоков с уникальными названиями для всех 80 блоков
+        function createProgressiveBlocks(stage = 1, startHealth = 18, healthIncrease = 12) {
             const blocks = [];
             let currentHealth = startHealth;
             
+            // Определяем количество блоков для каждой стадии
+            const stage1Blocks = 35; // Обычные блоки
+            const stage2Blocks = 25; // Адские блоки
+            const stage3Blocks = 20; // Финальные блоки
+            
+            let totalBlocks;
+            let stagePrefix = '';
+            let blockTypeBase = '';
+            
+            if (stage === 1) {
+                totalBlocks = stage1Blocks;
+                blockTypeBase = 'Обычный';
+            } else if (stage === 2) {
+                totalBlocks = stage2Blocks;
+                blockTypeBase = 'Адский';
+                currentHealth = startHealth * 3; // Адские блоки в 3 раза прочнее
+            } else {
+                totalBlocks = stage3Blocks;
+                blockTypeBase = 'Финальный';
+                currentHealth = startHealth * 10; // Финальные блоки в 10 раз прочнее
+            }
+            
             for (let i = 0; i < totalBlocks; i++) {
-                blocks.push({
-                    id: `block_${i + 1}`,
-                    name: getBlockNameByIndex(i),
-                    type: getBlockTypeByIndex(i),
-                    level: 1,
-                    baseHealth: currentHealth,
-                    baseCoins: { 
-                        min: Math.max(2, Math.floor(currentHealth / 12)), 
-                        max: Math.max(5, Math.floor(currentHealth / 6)) 
-                    },
-                    color: getBlockColorByIndex(i),
-                    innerColor: getBlockInnerColorByIndex(i),
-                    borderColor: getBlockBorderColorByIndex(i),
-                    borderSize: getBlockBorderSizeByIndex(i),
-                    experience: Math.floor(currentHealth / 2.5),
-                    isLucky: false
-                });
-                
+                // Увеличиваем здоровье с прогрессией
                 if (i < 5) {
                     currentHealth += healthIncrease;
                 } else if (i < 15) {
                     currentHealth += healthIncrease * 1.5;
-                } else if (i < 25) {
-                    currentHealth += healthIncrease * 2;
                 } else {
-                    currentHealth += healthIncrease * 2.5;
+                    currentHealth += healthIncrease * 2;
                 }
+                
+                // Добавляем множитель для адских и финальных блоков
+                let healthMultiplier = 1;
+                let coinMultiplier = 1;
+                
+                if (stage === 2) {
+                    healthMultiplier = 3;
+                    coinMultiplier = 5;
+                } else if (stage === 3) {
+                    healthMultiplier = 10;
+                    coinMultiplier = 20;
+                }
+                
+                blocks.push({
+                    id: `block_stage${stage}_${i + 1}`,
+                    name: getUniqueBlockName(stage, i),
+                    type: getBlockTypeByStage(stage, i),
+                    level: stage,
+                    baseHealth: Math.floor(currentHealth * healthMultiplier),
+                    baseCoins: { 
+                        min: Math.max(5, Math.floor(currentHealth / 8)) * coinMultiplier, 
+                        max: Math.max(10, Math.floor(currentHealth / 4)) * coinMultiplier 
+                    },
+                    color: getBlockColorByStageAndIndex(stage, i),
+                    innerColor: getBlockInnerColorByStageAndIndex(stage, i),
+                    borderColor: getBlockBorderColorByStageAndIndex(stage, i),
+                    borderSize: getBlockBorderSizeByStage(stage, i),
+                    experience: Math.floor(currentHealth / 2) * coinMultiplier,
+                    isLucky: false,
+                    stage: stage
+                });
             }
             
             return blocks;
         }
         
-        function getBlockNameByIndex(index) {
-            const names = [
-                "Земля", "Дерево", "Камень", "Булыжник", "Песок",
-                "Уголь", "Медь", "Железо", "Олово", "Свинец",
-                "Никель", "Цинк", "Серебро", "Алюминий", "Кварц",
-                "Золото", "Платина", "Алмаз", "Изумруд", "Рубин",
-                "Сапфир", "Топаз", "Аметист", "Опал", "Энергокамень",
-                "Синий минерал", "Светокамень", "Морской камень", "Вулканическое стекло", "Темный кристалл",
-                "Мифрил", "Адамантит", "Драконий камень", "Титан", "Уран"
-            ];
-            return names[index] || `Блок ${index + 1}`;
+        // Функция для получения уникальных названий для всех 80 блоков
+        function getUniqueBlockName(stage, index) {
+            if (stage === 1) {
+                const names = [
+                    "Земляной Ком", "Гнилая Древесина", "Речной Валун", "Мшистый Булыжник", "Пустынный Песок",
+                    "Каменный Уголь", "Медная Руда", "Железный Самородок", "Оловянная Жила", "Свинцовый Слиток",
+                    "Никелевая Пыль", "Цинковый Кристалл", "Серебряный Блеск", "Алюминиевая Фольга", "Горный Хрусталь",
+                    "Золотой Самородок", "Платиновая Пластина", "Алмазная Крошка", "Изумрудный Глаз", "Рубиновый Огонь",
+                    "Сапфировая Глубина", "Топазовый Свет", "Аметистовая Дымка", "Опаловое Сияние", "Энергетический Кварц",
+                    "Лазуритовый Шип", "Солнечный Камень", "Морская Жемчужина", "Вулканическое Стекло", "Обсидиановый Осколок",
+                    "Мифриловая Нить", "Адамантитовый Стержень", "Драконий Коготь", "Титановый Сплав", "Урановая Смолка"
+                ];
+                return names[index];
+            } else if (stage === 2) {
+                const names = [
+                    "Пепельная Почва", "Огненная Сердцевина", "Магмовый Сгусток", "Вулканическая Бомба", "Демоническая Кровь",
+                    "Инфернальный Череп", "Адская Сера", "Пламенный Клык", "Дьявольский Рог", "Саламандровая Чешуя",
+                    "Фениксово Перо", "Бездонная Тень", "Кошмарный Камень", "Пекельный Жар", "Горгоний Взгляд",
+                    "Церберова Пасть", "Лилитовая Слеза", "Ваалова Искра", "Асмодейский Шёпот", "Люциферов Свет",
+                    "Сатанинский Коготь", "Мефистофельский Смех", "Вельзевулова Муха", "Астаротова Звезда", "Молохова Жертва"
+                ];
+                return names[index];
+            } else {
+                const names = [
+                    "Космическая Пыль", "Нейтронная Звезда", "Кварковое Ядро", "Гравитационная Аномалия", "Темная Энергия",
+                    "Сингулярность", "Квантовый Вихрь", "Временной Разлом", "Пространственный Искривитель", "Эфирный Эфир",
+                    "Божественный Нектар", "Тиаматова Чешуя", "Абиссальная Бездна", "Эфириум Кристалл", "Астральный Свет",
+                    "Некрономикон Страницы", "Ктулху Щупальце", "Бездонная Пустота", "Бесконечная Спираль", "Абсолютный Ноль"
+                ];
+                return names[index];
+            }
         }
         
-        function getBlockTypeByIndex(index) {
-            if (index < 5) return 'Базовый';
-            if (index < 15) return 'Руда';
-            if (index < 25) return 'Драгоценный';
-            return 'Легендарный';
+        function getBlockTypeByStage(stage, index) {
+            if (stage === 1) {
+                if (index < 5) return 'Базовый';
+                if (index < 15) return 'Руда';
+                if (index < 25) return 'Драгоценный';
+                return 'Легендарный';
+            } else if (stage === 2) {
+                if (index < 5) return 'Адский базовый';
+                if (index < 15) return 'Адская руда';
+                return 'Инфернальный';
+            } else {
+                if (index < 5) return 'Космический';
+                if (index < 15) return 'Божественный';
+                return 'Абсолютный';
+            }
         }
         
-        function getBlockColorByIndex(index) {
-            const colors = [
-                "#8B4513", "#8B4513", "#808080", "#696969", "#F4A460",
-                "#2F4F4F", "#B87333", "#D1D1D1", "#C0C0C0", "#575757",
-                "#A8A8A8", "#DAA520", "#C0C0C0", "#A9A9A9", "#F5F5F5",
-                "#FFD700", "#E5E4E2", "#00FFFF", "#00FF00", "#FF0000",
-                "#0000FF", "#FFD700", "#9932CC", "#E6E6FA", "#FF0000",
-                "#0000FF", "#FFD700", "#20B2AA", "#000000", "#4A4A4A",
-                "#87CEEB", "#FF4500", "#8A2BE2", "#4682B4", "#32CD32"
-            ];
-            return colors[index] || "#808080";
+        function getBlockColorByStageAndIndex(stage, index) {
+            if (stage === 1) {
+                const colors = [
+                    "#8B4513", "#8B4513", "#808080", "#696969", "#F4A460",
+                    "#2F4F4F", "#B87333", "#D1D1D1", "#C0C0C0", "#575757",
+                    "#A8A8A8", "#DAA520", "#C0C0C0", "#A9A9A9", "#F5F5F5",
+                    "#FFD700", "#E5E4E2", "#00FFFF", "#00FF00", "#FF0000",
+                    "#0000FF", "#FFD700", "#9932CC", "#E6E6FA", "#FF0000",
+                    "#0000FF", "#FFD700", "#20B2AA", "#000000", "#4A4A4A",
+                    "#87CEEB", "#FF4500", "#8A2BE2", "#4682B4", "#32CD32"
+                ];
+                return colors[index];
+            } else if (stage === 2) {
+                const colors = [
+                    "#8B0000", "#B22222", "#DC143C", "#FF4500", "#FF6347",
+                    "#CD5C5C", "#F08080", "#E9967A", "#FA8072", "#FFA07A",
+                    "#FF7F50", "#FF8C00", "#FFA500", "#FFD700", "#DAA520",
+                    "#B8860B", "#CD853F", "#D2691E", "#8B4513", "#A0522D",
+                    "#800000", "#8B0000", "#B22222", "#DC143C", "#FF4500"
+                ];
+                return colors[index];
+            } else {
+                const colors = [
+                    "#4B0082", "#483D8B", "#6A5ACD", "#7B68EE", "#9370DB",
+                    "#8A2BE2", "#9400D3", "#9932CC", "#BA55D3", "#DA70D6",
+                    "#C71585", "#DB7093", "#FF1493", "#FF69B4", "#FFB6C1",
+                    "#FFC0CB", "#FFD700", "#FFFF00", "#FFE4B5", "#F0E68C"
+                ];
+                return colors[index];
+            }
         }
         
-        function getBlockInnerColorByIndex(index) {
-            const colors = [
-                "#A0522D", "#D49F31", "#A0A0A0", "#808080", "#DEB887",
-                "#363636", "#DA8A67", "#B0B0B0", "#D3D3D3", "#696969",
-                "#C0C0C0", "#F0E68C", "#E0E0E0", "#C9C9C9", "#FFFFFF",
-                "#FFEC8B", "#FFFFFF", "#AFEEEE", "#98FB98", "#FF6347",
-                "#4169E1", "#FFFACD", "#DA70D6", "#F0F8FF", "#FF4500",
-                "#1E90FF", "#FFFF00", "#48D1CC", "#2F2F2F", "#696969",
-                "#B0E0E6", "#FF6347", "#9370DB", "#87CEEB", "#90EE90"
-            ];
-            return colors[index] || "#A0A0A0";
+        function getBlockInnerColorByStageAndIndex(stage, index) {
+            if (stage === 1) {
+                const colors = [
+                    "#A0522D", "#D49F31", "#A0A0A0", "#808080", "#DEB887",
+                    "#363636", "#DA8A67", "#B0B0B0", "#D3D3D3", "#696969",
+                    "#C0C0C0", "#F0E68C", "#E0E0E0", "#C9C9C9", "#FFFFFF",
+                    "#FFEC8B", "#FFFFFF", "#AFEEEE", "#98FB98", "#FF6347",
+                    "#4169E1", "#FFFACD", "#DA70D6", "#F0F8FF", "#FF4500",
+                    "#1E90FF", "#FFFF00", "#48D1CC", "#2F2F2F", "#696969",
+                    "#B0E0E6", "#FF6347", "#9370DB", "#87CEEB", "#90EE90"
+                ];
+                return colors[index];
+            } else if (stage === 2) {
+                return "#FF4500";
+            } else {
+                return "#E6E6FA";
+            }
         }
         
-        function getBlockBorderColorByIndex(index) {
-            const colors = [
-                "#654321", "#733B0A", "#606060", "#505050", "#D2691E",
-                "#1C1C1C", "#8B4513", "#888888", "#A9A9A9", "#404040",
-                "#808080", "#B8860B", "#A0A0A0", "#898989", "#C0C0C0",
-                "#B8860B", "#C0C0C0", "#008B8B", "#006400", "#8B0000",
-                "#00008B", "#DAA520", "#8B008B", "#D8BFD8", "#8B0000",
-                "#00008B", "#FFA500", "#008B8B", "#1A1A1A", "#2C2C2C",
-                "#4682B4", "#B22222", "#4B0082", "#2F4F4F", "#228B22"
-            ];
-            return colors[index] || "#606060";
+        function getBlockBorderColorByStageAndIndex(stage, index) {
+            if (stage === 1) {
+                const colors = [
+                    "#654321", "#733B0A", "#606060", "#505050", "#D2691E",
+                    "#1C1C1C", "#8B4513", "#888888", "#A9A9A9", "#404040",
+                    "#808080", "#B8860B", "#A0A0A0", "#898989", "#C0C0C0",
+                    "#B8860B", "#C0C0C0", "#008B8B", "#006400", "#8B0000",
+                    "#00008B", "#DAA520", "#8B008B", "#D8BFD8", "#8B0000",
+                    "#00008B", "#FFA500", "#008B8B", "#1A1A1A", "#2C2C2C",
+                    "#4682B4", "#B22222", "#4B0082", "#2F4F4F", "#228B22"
+                ];
+                return colors[index];
+            } else if (stage === 2) {
+                return "#8B0000";
+            } else {
+                return "#4B0082";
+            }
         }
         
-        function getBlockBorderSizeByIndex(index) {
-            if (index < 5) return "6px";
-            if (index < 15) return "7px";
-            if (index < 25) return "9px";
-            return index >= 30 ? "11px" : "10px";
+        function getBlockBorderSizeByStage(stage, index) {
+            if (stage === 1) {
+                if (index < 5) return "6px";
+                if (index < 15) return "7px";
+                if (index < 25) return "9px";
+                return index >= 30 ? "11px" : "10px";
+            } else if (stage === 2) {
+                return "8px";
+            } else {
+                return "12px";
+            }
         }
         
         const luckyBlockData = {
@@ -2392,78 +2528,6 @@
                     return {
                         damage: [1, 2, 3, 4, 5, 6, 7][level-1] || 1,
                         interval: [10000, 9000, 8000, 7000, 6000, 5000, 4000][level-1] || 10000
-                    };
-                }
-            },
-            {
-                id: 'auto_clicker_2',
-                name: 'Улучшенный автокликер',
-                category: 'clickers',
-                basePrice: 15000,
-                priceMultiplier: 2.0,
-                maxLevel: 7,
-                description: 'Быстрый автокликер с улучшенным уроном.',
-                icon: 'fas fa-bolt',
-                iconColor: '#FF9800',
-                effect: { type: 'autoClicker', baseDamage: 2, baseInterval: 8000 },
-                getDescription: function(level) {
-                    const intervals = [8000, 7200, 6400, 5600, 4800, 4000, 3200];
-                    const damages = [2, 3, 4, 5, 6, 7, 8];
-                    return `Наносит ${damages[level-1]} урон каждые ${intervals[level-1]/1000} сек`;
-                },
-                requires: 'auto_clicker_1',
-                getStats: function(level) {
-                    return {
-                        damage: [2, 3, 4, 5, 6, 7, 8][level-1] || 2,
-                        interval: [8000, 7200, 6400, 5600, 4800, 4000, 3200][level-1] || 8000
-                    };
-                }
-            },
-            {
-                id: 'auto_clicker_3',
-                name: 'Продвинутый автокликер',
-                category: 'clickers',
-                basePrice: 45000,
-                priceMultiplier: 2.2,
-                maxLevel: 7,
-                description: 'Мощный автокликер для опытных игроков.',
-                icon: 'fas fa-rocket',
-                iconColor: '#F44336',
-                effect: { type: 'autoClicker', baseDamage: 3, baseInterval: 6000 },
-                getDescription: function(level) {
-                    const intervals = [6000, 5400, 4800, 4200, 3600, 3000, 2400];
-                    const damages = [3, 5, 7, 9, 11, 13, 15];
-                    return `Наносит ${damages[level-1]} урон каждые ${intervals[level-1]/1000} сек`;
-                },
-                requires: 'auto_clicker_2',
-                getStats: function(level) {
-                    return {
-                        damage: [3, 5, 7, 9, 11, 13, 15][level-1] || 3,
-                        interval: [6000, 5400, 4800, 4200, 3600, 3000, 2400][level-1] || 6000
-                    };
-                }
-            },
-            {
-                id: 'auto_clicker_4',
-                name: 'Эпический автокликер',
-                category: 'clickers',
-                basePrice: 125000,
-                priceMultiplier: 2.4,
-                maxLevel: 7,
-                description: 'Эпический автокликер с огромным уроном.',
-                icon: 'fas fa-robot',
-                iconColor: '#9C27B0',
-                effect: { type: 'autoClicker', baseDamage: 5, baseInterval: 5000 },
-                getDescription: function(level) {
-                    const intervals = [5000, 4500, 4000, 3500, 3000, 2500, 2000];
-                    const damages = [5, 8, 11, 14, 17, 20, 25];
-                    return `Наносит ${damages[level-1]} урон каждые ${intervals[level-1]/1000} сек`;
-                },
-                requires: 'auto_clicker_3',
-                getStats: function(level) {
-                    return {
-                        damage: [5, 8, 11, 14, 17, 20, 25][level-1] || 5,
-                        interval: [5000, 4500, 4000, 3500, 3000, 2500, 2000][level-1] || 5000
                     };
                 }
             },
@@ -2668,7 +2732,7 @@
             fastBlockBreaks: 0,
             autoClickersPurchased: 0,
             maxUpgrades: 0,
-            blocksDestroyed: Array(35).fill(0),
+            blocksDestroyed: Array(80).fill(0),
             perfectHits: 0,
             autoDamage: 0,
             noRegenBlocks: 0,
@@ -2700,7 +2764,6 @@
             luckBoostActive: false,
             luckBoostEnd: 0,
             
-            soundEnabled: true,
             notificationsEnabled: true,
             autosaveEnabled: true,
             animationsEnabled: true,
@@ -2733,7 +2796,6 @@
         
         const block = document.getElementById('block');
         const blockImg = document.getElementById('block-img');
-        const cracksOverlay = document.getElementById('cracks-overlay');
         const coinsCounter = document.getElementById('coins-counter');
         const stageCounter = document.getElementById('stage-counter');
         const blockName = document.getElementById('block-name');
@@ -2746,6 +2808,16 @@
         let gameActive = false;
         let gameTimerInterval = null;
         let lastTimerUpdate = Date.now();
+        
+        function formatCompact(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'к';
+            }
+            return num.toString();
+        }
         
         function startGameTimer() {
             if (gameTimerInterval) return;
@@ -2832,7 +2904,7 @@
                     case 'all_blocks':
                         const uniqueBlocks = gameState.blocksDestroyed.filter(count => count > 0).length;
                         progress = uniqueBlocks;
-                        maxProgress = Math.min(maxProgress, 35);
+                        maxProgress = Math.min(maxProgress, 80);
                         break;
                 }
                 
@@ -3037,7 +3109,7 @@
                     break;
                 case 'all_blocks':
                     progress = gameState.blocksDestroyed.filter(count => count > 0).length;
-                    maxProgress = Math.min(maxProgress, 35);
+                    maxProgress = Math.min(maxProgress, 80);
                     break;
                 default:
                     progress = achievementState.progress;
@@ -3116,7 +3188,6 @@
                     luckBoostActive: gameState.luckBoostActive,
                     luckBoostEnd: gameState.luckBoostEnd,
                     
-                    soundEnabled: gameState.soundEnabled,
                     notificationsEnabled: gameState.notificationsEnabled,
                     autosaveEnabled: gameState.autosaveEnabled,
                     animationsEnabled: gameState.animationsEnabled,
@@ -3229,11 +3300,11 @@
             const baseHealth = 18 + (stage - 1) * 6;
             const healthIncrease = 12 + (stage - 1) * 3;
             
-            blocks = createProgressiveBlocks(baseHealth, healthIncrease);
+            blocks = createProgressiveBlocks(stage, baseHealth, healthIncrease);
             healthMultiplier = 1 + (stage - 1) * 0.25;
             
             blocks.forEach(block => {
-                block.maxHealth = Math.floor(block.baseHealth * healthMultiplier);
+                block.maxHealth = block.baseHealth;
             });
             
             currentStage = stage;
@@ -3268,7 +3339,7 @@
                     return initCurrentBlock();
                 }
                 
-                gameState.maxHealth = blockData.maxHealth;
+                gameState.maxHealth = blockData.baseHealth;
                 
                 if (gameState.currentHealth <= 0 || gameState.currentHealth > gameState.maxHealth) {
                     gameState.currentHealth = gameState.maxHealth;
@@ -3277,7 +3348,16 @@
                 createBlockSVG(blockData);
                 blockName.textContent = blockData.name;
                 blockType.textContent = blockData.type;
-                block.classList.remove('lucky');
+                
+                // Убираем все специальные классы
+                block.classList.remove('lucky', 'hell', 'final');
+                
+                // Добавляем класс в зависимости от стадии
+                if (currentStage === 2) {
+                    block.classList.add('hell');
+                } else if (currentStage === 3) {
+                    block.classList.add('final');
+                }
                 
                 if (currentStage > 1) {
                     blockName.textContent = `${blockData.name} (Стадия ${currentStage})`;
@@ -3292,6 +3372,8 @@
             createBlockSVG(luckyBlockData);
             blockName.textContent = luckyBlockData.name;
             blockType.textContent = luckyBlockData.type;
+            
+            block.classList.remove('hell', 'final');
             block.classList.add('lucky');
             
             if (gameState.notificationsEnabled) {
@@ -3303,6 +3385,33 @@
         }
         
         function createBlockSVG(blockData) {
+            let additionalEffects = '';
+            
+            if (currentStage === 2) {
+                additionalEffects = `
+                    <circle cx="120" cy="120" r="60" fill="none" stroke="#FF4500" stroke-width="2" opacity="0.5">
+                        <animate attributeName="r" values="60;80;60" dur="3s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="120" cy="120" r="40" fill="none" stroke="#FF8C00" stroke-width="2" opacity="0.3">
+                        <animate attributeName="r" values="40;60;40" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                `;
+            } else if (currentStage === 3) {
+                additionalEffects = `
+                    <circle cx="120" cy="120" r="70" fill="none" stroke="#8A2BE2" stroke-width="3" opacity="0.6">
+                        <animate attributeName="r" values="70;90;70" dur="4s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="120" cy="120" r="50" fill="none" stroke="#9400D3" stroke-width="3" opacity="0.4">
+                        <animate attributeName="r" values="50;70;50" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="120" cy="120" r="30" fill="none" stroke="#4B0082" stroke-width="2" opacity="0.8">
+                        <animate attributeName="r" values="30;50;30" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                `;
+            }
+            
             const svgCode = `
                 <svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -3319,6 +3428,7 @@
                     <rect x="20" y="20" width="200" height="200" fill="${blockData.innerColor}" rx="3"/>
                     <rect x="10" y="10" width="220" height="220" fill="url(#blockPattern)" opacity="0.4" rx="5"/>
                     <rect width="240" height="240" fill="none" stroke="${blockData.borderColor}" stroke-width="${blockData.borderSize}" rx="5"/>
+                    ${additionalEffects}
                 </svg>
             `;
             
@@ -3326,8 +3436,6 @@
             const svgUrl = URL.createObjectURL(svgBlob);
             blockImg.src = svgUrl;
             blockImg.style.borderColor = blockData.borderColor;
-            
-            updateCracks();
         }
         
         function updateUI() {
@@ -3347,7 +3455,6 @@
             }
             
             updateStatsDisplay();
-            updateCracks();
             
             checkActiveBoosts();
         }
@@ -3408,38 +3515,6 @@
             setTimeout(() => {
                 notification.remove();
             }, 3000);
-        }
-        
-        function updateCracks() {
-            const healthPercent = gameState.currentHealth / gameState.maxHealth;
-            let crackLevel = 0;
-            
-            if (healthPercent < 0.33) {
-                crackLevel = 2;
-            } else if (healthPercent < 0.66) {
-                crackLevel = 1;
-            }
-            
-            const opacity = 1 - healthPercent;
-            cracksOverlay.style.opacity = opacity * 0.9;
-            
-            const crackSVG = createCrackSVG(crackLevel);
-            cracksOverlay.style.backgroundImage = `url('${crackSVG}')`;
-        }
-        
-        function createCrackSVG(level) {
-            const strokeWidth = 3 + level;
-            const opacity = 0.3 + (level * 0.2);
-            
-            const svgCode = `
-                <svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M${40 + level * 10},${40 + level * 5} L${60 + level * 10},${70 + level * 5} M${80 + level * 5},${30 + level * 5} L${100 + level * 5},${60 + level * 5} M${120 + level * 10},${70 + level * 5} L${100 + level * 10},${100 + level * 5} M${50 + level * 5},${100 + level * 10} L${70 + level * 5},${130 + level * 10} M${90 + level * 10},${140 + level * 5} L${110 + level * 10},${170 + level * 5} M${130 + level * 5},${160 + level * 10} L${110 + level * 5},${190 + level * 10} M${160 + level * 10},${50 + level * 5} L${180 + level * 10},${80 + level * 5} M${180 + level * 5},${110 + level * 10} L${160 + level * 5},${140 + level * 10} M${190 + level * 10},${80 + level * 5} L${170 + level * 10},${110 + level * 5}" 
-                    stroke="#000" stroke-width="${strokeWidth}" stroke-opacity="${opacity}" fill="none"/>
-                </svg>
-            `;
-            
-            const svgBlob = new Blob([svgCode], {type: 'image/svg+xml'});
-            return URL.createObjectURL(svgBlob);
         }
         
         function updateStatsDisplay() {
@@ -3605,7 +3680,7 @@
             
             coins *= gameState.coinMultiplier;
             coins *= gameState.luckMultiplier;
-            coins *= (1 + ((currentStage - 1) * 0.1));
+            coins *= (1 + ((currentStage - 1) * 0.2));
             
             if (gameState.doubleCoinsActive) {
                 coins *= 2;
@@ -3688,7 +3763,7 @@
                 lastBlockWasLucky = true;
             } else {
                 blockData = blocks[gameState.currentBlock];
-                bonusCoins = Math.floor(blockData.baseCoins.max * 3 * gameState.coinMultiplier * (1 + ((currentStage - 1) * 0.1)));
+                bonusCoins = Math.floor(blockData.baseCoins.max * 3 * gameState.coinMultiplier * (1 + ((currentStage - 1) * 0.2)));
                 
                 if (gameState.currentBlock < gameState.blocksDestroyed.length) {
                     gameState.blocksDestroyed[gameState.currentBlock] = (gameState.blocksDestroyed[gameState.currentBlock] || 0) + 1;
@@ -3750,48 +3825,22 @@
             gameState.currentBlock = 0;
             
             if (gameState.notificationsEnabled) {
-                showNewStageNotification();
+                if (currentStage === 2) {
+                    hellStageNotification.style.display = 'block';
+                    setTimeout(() => {
+                        hellStageNotification.style.display = 'none';
+                    }, 3000);
+                } else if (currentStage === 3) {
+                    finalStageNotification.style.display = 'block';
+                    setTimeout(() => {
+                        finalStageNotification.style.display = 'none';
+                    }, 3000);
+                }
             }
             
             initCurrentBlock();
             updateUI();
             saveGame();
-        }
-        
-        function showNewStageNotification() {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(45deg, #9C27B0, #7B1FA2);
-                color: white;
-                padding: 20px 30px;
-                border-radius: 15px;
-                font-size: 1.5rem;
-                font-weight: bold;
-                z-index: 1000;
-                text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                animation: fadeIn 0.5s, fadeOut 0.5s 3s forwards;
-            `;
-            
-            notification.innerHTML = `
-                <div style="font-size: 2rem; margin-bottom: 10px;">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <div>Стадия ${currentStage}!</div>
-                <div style="font-size: 1rem; margin-top: 10px; opacity: 0.8;">
-                    Здоровье блоков увеличено на 25%
-                </div>
-            `;
-            
-            document.getElementById('game-container').appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3500);
         }
         
         function startRegenerationTimer() {
@@ -3984,7 +4033,7 @@
                             </div>
                             ${item.name} ${item.maxLevel > 1 && !item.consumable ? `<span style="color: var(--accent-color); font-size: 0.9rem;">Lv.${level}</span>` : ''}
                         </div>
-                        <div class="item-price">${formatNumber(price)}</div>
+                        <div class="item-price">${formatCompact(price)}</div>
                     </div>
                     ${levelInfo}
                     <div class="item-description">${description}</div>
@@ -3992,8 +4041,8 @@
                     ${countInfo}
                     <button class="buy-btn" data-id="${item.id}" ${!canPurchase ? 'disabled' : ''}>
                         ${level === 0 ? '<i class="fas fa-shopping-cart"></i> Купить' : 
-                          item.consumable ? `<i class="fas fa-plus"></i> Купить еще (${formatNumber(price)})` :
-                          level < item.maxLevel ? `<i class="fas fa-arrow-up"></i> Улучшить до Lv.${level + 1} (${formatNumber(price)})` : 
+                          item.consumable ? `<i class="fas fa-plus"></i> Купить еще (${formatCompact(price)})` :
+                          level < item.maxLevel ? `<i class="fas fa-arrow-up"></i> Улучшить до Lv.${level + 1} (${formatCompact(price)})` : 
                           '<i class="fas fa-check"></i> Макс. уровень'}
                     </button>
                 `;
@@ -4027,9 +4076,16 @@
             const hours = Math.floor(totalPlayTime / 3600);
             const minutes = Math.floor((totalPlayTime % 3600) / 60);
             
+            const stage1BlocksBroken = gameState.blocksDestroyed.slice(0, 35).filter(v => v > 0).length;
+            const stage2BlocksBroken = gameState.blocksDestroyed.slice(35, 60).filter(v => v > 0).length;
+            const stage3BlocksBroken = gameState.blocksDestroyed.slice(60, 80).filter(v => v > 0).length;
+            
             const stats = [
                 { label: 'Всего кликов', value: gameState.totalClicks, icon: 'fas fa-mouse-pointer' },
                 { label: 'Разрушено блоков', value: gameState.blocksBroken, icon: 'fas fa-gem' },
+                { label: 'Стадия 1 блоков', value: stage1BlocksBroken, icon: 'fas fa-tree' },
+                { label: 'Стадия 2 блоков (Ад)', value: stage2BlocksBroken, icon: 'fas fa-fire' },
+                { label: 'Стадия 3 блоков (Финал)', value: stage3BlocksBroken, icon: 'fas fa-crown' },
                 { label: 'Заработано монет', value: gameState.totalCoinsEarned, icon: 'fas fa-coins' },
                 { label: 'Нанесено урона', value: Math.floor(gameState.totalDamage), icon: 'fas fa-fist-raised' },
                 { label: 'Найдено Lucky Blocks', value: gameState.luckyBlocksFound, icon: 'fas fa-star' },
@@ -4252,7 +4308,7 @@
                     fastBlockBreaks: 0,
                     autoClickersPurchased: 0,
                     maxUpgrades: 0,
-                    blocksDestroyed: Array(35).fill(0),
+                    blocksDestroyed: Array(80).fill(0),
                     perfectHits: 0,
                     autoDamage: 0,
                     noRegenBlocks: 0,
@@ -4284,7 +4340,6 @@
                     luckBoostActive: false,
                     luckBoostEnd: 0,
                     
-                    soundEnabled: gameState.soundEnabled,
                     notificationsEnabled: gameState.notificationsEnabled,
                     autosaveEnabled: gameState.autosaveEnabled,
                     animationsEnabled: gameState.animationsEnabled,
@@ -4341,7 +4396,6 @@
                 settingsScreen.style.display = 'flex';
                 stopGameTimer();
                 
-                document.getElementById('sound-toggle').checked = gameState.soundEnabled;
                 document.getElementById('notifications-toggle').checked = gameState.notificationsEnabled;
                 document.getElementById('autosave-toggle').checked = gameState.autosaveEnabled;
                 document.getElementById('animations-toggle').checked = gameState.animationsEnabled;
@@ -4406,11 +4460,6 @@
             
             document.getElementById('close-modal-btn').addEventListener('click', () => {
                 document.getElementById('privacy-modal').style.display = 'none';
-            });
-            
-            document.getElementById('sound-toggle').addEventListener('change', () => {
-                gameState.soundEnabled = document.getElementById('sound-toggle').checked;
-                saveGame();
             });
             
             document.getElementById('notifications-toggle').addEventListener('change', () => {
